@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>V9.0.0 Broadcast</title>
+  <link rel="stylesheet" href="../css/app.css?v=900">
+  <style>
+    html,body{width:100%;height:100%;margin:0;background:#000;overflow:hidden}
+    #stage{position:fixed;inset:0;width:100%;height:100%;background:#000}
+    #program,#replayVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}#replayVideo{display:none;z-index:8}#replayVideo.show{display:block}
+    #overlayFrame{z-index:12;position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;background:transparent}
+    #fade,#black{z-index:20;position:absolute;inset:0;pointer-events:none}
+    #fade{background:#000;opacity:0;transition:opacity .45s linear}
+    #fade.show{opacity:1}
+    #black{background:#000;opacity:0;transition:opacity .2s linear}
+    #black.show{opacity:1}
+    #diagnostic{position:fixed;left:10px;bottom:10px;z-index:50;padding:7px 10px;border-radius:999px;background:rgba(0,0,0,.75);color:#fff;font:600 12px/1.2 system-ui;display:none}
+    html.debug #diagnostic{display:block}#replayBug{display:none;position:absolute;left:3%;top:5%;z-index:18;padding:10px 18px;border-radius:7px;background:#d00000;color:#fff;font:900 18px/1 system-ui;letter-spacing:2px;box-shadow:0 3px 14px rgba(0,0,0,.5)}#replayBug.show{display:block;animation:bugPulse 1.1s infinite}@keyframes bugPulse{50%{opacity:.72}}
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <video id="program" autoplay playsinline muted></video><video id="replayVideo" playsinline muted></video><div id="replayBug">REPLAY</div>
+    <iframe id="overlayFrame" title="Overlay integrado" allow="autoplay; fullscreen" referrerpolicy="no-referrer"></iframe>
+    <div id="fade"></div>
+    <div id="black"></div>
+  </div>
+  <div id="diagnostic">Iniciando V9…</div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="../config/firebase-config.js?v=900"></script>
+  <script src="../config/app-config.js?v=900"></script>
+  <script src="../js/shared/core.js?v=900"></script>
+  <script src="../js/broadcast/app.js?v=900"></script>
+</body>
+</html>
