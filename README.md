@@ -1,7 +1,13 @@
-# Switcher Deportivo V9
+# Switcher Deportivo V9.0.2 — GitHub Pages + PRISM
 
-Switcher multicámara móvil para béisbol: 3 cámaras Android, Director, Broadcast directo para PRISM Live Mobile, overlay y replay local.
+Paquete completo para tres cámaras Android, Director, Broadcast directo, replay, overlay, Firebase y Cloudflare TURN.
 
-La mejora principal de V9 es que Broadcast conecta directamente con la cámara seleccionada en PROGRAM. Esto elimina el relay Director → canvas → Broadcast que causó pantallas negras y consumo excesivo de memoria.
+**Orden de instalación:**
 
-Consulta `docs/INSTALACION_GITHUB_PAGES.md`.
+1. Actualiza el Worker con `cloudflare-worker/src-index.js`.
+2. Comprueba que `/health` responda `version: 9.0.2`.
+3. Sube el contenido de este paquete a la raíz de GitHub Pages.
+4. Prueba CAM1 → Director → Broadcast diagnóstico.
+5. Solo después abre PRISM Widget → Web.
+
+Consulta `docs/ACTUALIZACION_V9_0_2.md`.

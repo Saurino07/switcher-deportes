@@ -1,5 +1,5 @@
 window.SWITCHER_APP_CONFIG = {
-  version: "9.0.1",
+  version: "9.0.2",
   turnEndpoint: "https://switcher-beisbol-turn.deporte-total.workers.dev/turn-credentials",
   defaultGame: "partido1",
   cameras: ["cam1", "cam2", "cam3"],

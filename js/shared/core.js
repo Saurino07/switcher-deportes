@@ -38,21 +38,31 @@
     return code;
   }
   async function getIceServers({ game, role, clientId }) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
-    try {
-      const response = await fetch(app.turnEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Switcher-Code": getAccessCode() },
-        body: JSON.stringify({ game, role, clientId }),
-        signal: controller.signal,
-        cache: "no-store"
-      });
-      if (!response.ok) throw new Error(`TURN HTTP ${response.status}: ${await response.text()}`);
-      const data = await response.json();
-      if (!Array.isArray(data.iceServers) || !data.iceServers.length) throw new Error("Respuesta TURN inválida");
-      return data.iceServers;
-    } finally { clearTimeout(timeout); }
+    const accessCode = getAccessCode();
+    let lastError;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(app.turnEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Switcher-Code": accessCode },
+          body: JSON.stringify({ game, role, clientId }),
+          signal: controller.signal,
+          cache: "no-store"
+        });
+        const text = await response.text();
+        if (!response.ok) throw new Error(`TURN HTTP ${response.status}: ${text}`);
+        let data;
+        try { data = JSON.parse(text); } catch { throw new Error("Respuesta TURN no es JSON válido"); }
+        if (!Array.isArray(data.iceServers) || !data.iceServers.length) throw new Error("Respuesta TURN sin servidores ICE");
+        return data.iceServers;
+      } catch (error) {
+        lastError = error;
+        if (attempt < 2) await sleep(900);
+      } finally { clearTimeout(timeout); }
+    }
+    throw lastError || new Error("No fue posible obtener credenciales TURN");
   }
   function peerConfig(iceServers) {
     return {
