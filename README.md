@@ -1,13 +1,24 @@
-# Switcher Deportivo V9.0.3 — GitHub Pages + PRISM
+# Switcher Deportivo V10 Final
 
-Paquete completo para tres cámaras Android, Director, Broadcast directo, replay, overlay, Firebase y Cloudflare TURN.
+Versión para GitHub Pages, Firebase Realtime Database, Cloudflare TURN y PRISM Live Mobile.
 
-**Orden de instalación:**
+## Cambio principal
 
-1. Actualiza el Worker con `cloudflare-worker/src-index.js`.
-2. Comprueba que `/health` responda `version: 9.0.3`.
-3. Sube el contenido de este paquete a la raíz de GitHub Pages.
-4. Prueba CAM1 → Director → Broadcast diagnóstico.
-5. Solo después abre PRISM Widget → Web.
+El overlay de béisbol está incluido localmente en `overlay/index.html` y se carga como una capa transparente de pantalla completa sobre el video. Ya no se recorta el iframe ni se depende del fondo del dominio externo.
 
-Consulta `docs/ACTUALIZACION_V9_0_2.md`.
+## Publicación
+
+Sube el contenido interno de esta carpeta a la raíz del repositorio `Saurino07/switcher-deportes` y reemplaza los archivos existentes.
+
+## URLs
+
+- CAM1: `/cam/index.html?cam=cam1&game=partido1&v=1000&code=TU_CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1000&code=TU_CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1000&code=TU_CODIGO`
+- Director: `/director/index.html?game=partido1&v=1000&code=TU_CODIGO`
+- Diagnóstico: `/broadcast/index.html?game=partido1&v=1000&debug=1&code=TU_CODIGO`
+- PRISM: `/broadcast/index.html?game=partido1&v=1000&code=TU_CODIGO`
+
+## Nota sobre recursos del overlay
+
+El marcador principal funciona con el HTML integrado. Algunas animaciones opcionales del overlay original referencian archivos de la carpeta `assets/` que no fueron incluidos en los archivos proporcionados. Esas animaciones requerirán copiar sus recursos originales a `overlay/assets/`.

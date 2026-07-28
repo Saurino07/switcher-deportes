@@ -1,5 +1,5 @@
 window.SWITCHER_APP_CONFIG = {
-  version: "9.0.3",
+  version: "10.0.0",
   turnEndpoint: "https://switcher-beisbol-turn.deporte-total.workers.dev/turn-credentials",
   defaultGame: "partido1",
   cameras: ["cam1", "cam2", "cam3"],
@@ -13,6 +13,6 @@ window.SWITCHER_APP_CONFIG = {
   iceTransportPolicy: "all",
   transitionMs: 450,
   replay: { maxSeconds: 30, segmentMs: 2000, maxSegments: 15, videoBitsPerSecond: 2200000 },
-  defaultOverlayUrl: "https://beisbol-overlay.web.app/overlay.html",
+  defaultOverlayUrl: "../overlay/index.html?embedded=1",
   overlayControlUrl: "https://beisbol-overlay.web.app/control.html"
 };

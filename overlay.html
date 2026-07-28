@@ -1,0 +1,4028 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Overlay Beisbol</title>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> <!-- 🔥 FALTABA -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<style>
+body {
+  margin: 0;
+  background: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* ================= CONTENEDOR GENERAL ================= */
+#overlay-root {
+  position: fixed;
+
+  /* 🔥 CLAVE: tamaño base REAL del overlay */
+  width: auto;
+  min-width: 860px;
+  height: auto;
+
+  pointer-events: none;
+  z-index: 1000;
+  transition: top 0.4s ease, left 0.4s ease, right 0.4s ease, bottom 0.4s ease;
+}
+#overlay-scale {
+  transform: scale(0.50);
+  transform-origin: top left;
+}
+.overlay-top-left #overlay-scale {
+  transform-origin: top left;
+}
+
+.overlay-top-right #overlay-scale {
+  transform-origin: top right;
+}
+
+.overlay-bottom-left #overlay-scale {
+  transform-origin: bottom left;
+}
+
+.overlay-bottom-right #overlay-scale {
+  transform-origin: bottom right;
+}
+
+/* ===== CONTENEDOR ===== */
+#overlay-bar {
+
+  position: relative;
+
+  width: auto;
+  min-width: 980px;
+
+  min-height: 210px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      180deg,
+      #041428 0%,
+      #061a33 45%,
+      #041428 100%
+    );
+
+  border: 2px solid #ffd200;
+
+  border-radius: 18px;
+
+  text-shadow:
+    0 2px 8px rgba(0,0,0,0.8);
+
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 0 35px rgba(0,140,255,0.30),
+    0 18px 45px rgba(0,0,0,0.85);
+}
+
+/* GLOW ANIMADO */
+#overlay-bar::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255,255,255,0.08) 45%,
+      transparent 100%
+    );
+
+  animation: foxSweep 4s linear infinite;
+
+  pointer-events: none;
+}
+/* =========================
+   CONTENEDOR FLEX MARCADOR + GIF
+========================= */
+#overlay-flex {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  gap: 30px;
+}
+#gif-zone {
+  position: fixed;
+  width: 420px;
+  height: 200px;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  pointer-events: none;
+  z-index: 5000;
+
+  transition: all 0.3s ease;
+}
+
+/* POSICIONES AUTOMÁTICAS */
+
+.gif-bottom-left {
+  bottom: 0px;
+  left: 0px;
+}
+
+.gif-bottom-right {
+  bottom: 0px;
+  right: 0px;
+}
+
+.gif-top-left {
+  top: 0px;
+  left: 0px;
+}
+
+.gif-top-right {
+  top: 0px;
+  right: 0px;
+}
+
+#gif-zone img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  animation: gifPop 0.4s ease-out;
+}
+/* ===== TÍTULO ===== */
+#overlay-title {
+
+  width: 100%;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      90deg,
+      #03101f,
+      #082346,
+      #03101f
+    );
+
+  border-bottom:
+    2px solid #ffd200;
+
+  font-size: 34px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+  color: white;
+
+  text-transform: uppercase;
+
+  box-shadow:
+    inset 0 -8px 18px rgba(0,170,255,0.12);
+}
+
+/* ===== BARRA PRINCIPAL ===== */
+#overlay-main {
+  min-height: 110px;
+  height: auto;
+  background: linear-gradient(to right, #0a223a, #0f355c);
+
+  display: grid;
+  grid-template-columns: auto auto auto; /* 🔥 CLAVE */
+  align-items: center;
+
+  padding: 8px 30px;
+  box-sizing: border-box;
+  width: max-content;
+  /*overflow: visible;*/
+}
+
+/* =================================
+   NUEVO SCOREBOARD MLB
+================================= */
+
+#overlay-bar {
+
+  min-width: 1250px;
+  min-height: auto;
+
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  border: 3px solid #d4af37;
+
+  background:
+    linear-gradient(
+      180deg,
+      #041428 0%,
+      #08264a 45%,
+      #041428 100%
+    );
+}
+
+/* MAIN */
+#overlay-main {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 280px 1fr;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 18px 30px;
+}
+
+/* EQUIPOS */
+.fox-team-box {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,30,60,0.95),
+      rgba(0,10,20,0.95)
+    );
+
+  border: 2px solid rgba(0,170,255,0.4);
+
+  border-radius: 14px;
+
+  padding: 12px 18px;
+
+  min-height: 120px;
+
+  box-shadow:
+    inset 0 0 25px rgba(0,140,255,0.12);
+}
+
+.team-side {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* LOGOS */
+.logo {
+  width: 92px;
+  height: 92px;
+}
+
+/* NOMBRE */
+.team-name {
+
+  font-size: 54px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+  color: white;
+}
+
+/* SCORE */
+.team-score {
+
+  width: 95px;
+  height: 95px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 72px;
+
+  font-weight: 900;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #0a3d6d,
+      #04172b
+    );
+
+  border:
+    2px solid rgba(255,255,255,0.15);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,170,255,0.2);
+}
+
+/* CENTRO */
+#center-live-box {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+}
+
+#live-pill {
+
+  background: #ff0000;
+
+  padding: 6px 18px;
+
+  border-radius: 40px;
+
+  font-size: 24px;
+
+  font-weight: 900;
+
+  animation: liveBlink 1s infinite;
+}
+
+#vs-text {
+
+  font-size: 64px;
+
+  font-weight: 900;
+
+  color: #ffd200;
+}
+
+#inning-mini {
+
+  font-size: 30px;
+
+  font-weight: bold;
+}
+
+/* BOTTOM PANEL */
+#count-panel {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 42px;
+
+  padding: 14px 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0.5),
+      rgba(0,20,40,0.8)
+    );
+
+  border-top:
+    2px solid rgba(0,170,255,0.25);
+}
+
+/* LABELS */
+.count-label {
+
+  font-size: 28px;
+
+  font-weight: 900;
+}
+
+/* DOTS */
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.count-dot {
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #2f2f2f;
+}
+
+.count-dot.active {
+  background: #00ff00;
+}
+
+.count-dot.strike.active {
+  background: #ffd200;
+}
+
+.count-dot.out.active {
+  background: #ff0000;
+}
+
+/* BASES */
+#bases-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.base-row {
+  display: flex;
+  gap: 14px;
+}
+
+.base {
+
+  width: 22px;
+  height: 22px;
+
+  background: #2f2f2f !important;
+
+  transform: rotate(45deg);
+
+  border:
+    1px solid rgba(255,255,255,0.15);
+}
+
+.base.active {
+  background: #ffd200 !important;
+}
+
+/* ===== EQUIPOS ===== */
+.team {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;        /* 🔥 ancho real controlado */
+}
+
+.team.left {
+  justify-content: flex-start;
+}
+
+.team.right {
+  justify-content: flex-end;
+}
+
+.logo {
+
+  width: 120px;
+  height: 120px;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 0 12px rgba(0,170,255,0.45));
+}
+/* ===== EFECTO BRILLO LOGO ===== */
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.logo-wrapper::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.9) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.logo-wrapper.shine::after {
+  animation: shineSweep 1.2s ease-out forwards;
+  opacity: 1;
+}
+
+@keyframes shineSweep {
+  0% { left: -75%; opacity: 1; }
+  100% { left: 130%; opacity: 0; }
+}
+
+.team-name {
+
+  font-size: 52px;
+  font-weight: 900;
+
+  color: white;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 0 12px rgba(255,255,255,0.18);
+}
+
+.team-score {
+
+  width: 110px;
+  height: 110px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      180deg,
+      #062a4d,
+      #04172b
+    );
+
+  border:
+    1px solid rgba(0,170,255,0.45);
+
+  border-radius: 10px;
+
+  font-size: 82px;
+  font-weight: 900;
+
+  color: white;
+
+  box-shadow:
+    inset 0 0 24px rgba(0,170,255,0.18),
+    0 0 12px rgba(0,140,255,0.25);
+}
+
+/* ===== CONTADORES ===== */
+#counts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#counts div {
+  background: #000;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.out {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: inline-block;
+}
+
+.out.active {
+  background: #ffd200;
+}
+
+/* ===== ENTRADA ===== */
+#inningBox {
+  font-size: 28px;  /*14*/
+  font-weight: 900; /*bold*/
+  letter-spacing: 2px;
+}
+
+/* ===== BASES ===== */
+#bases {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.base-row {
+  display: flex;
+  gap: 16px;
+}
+
+.base {
+  width: 30px;  /*14*/
+  height: 30px; /*14*/
+  background: #ddd;
+  transform: rotate(45deg);
+}
+
+.base.active {
+  background: #ffd200;
+}
+
+/* ===== ANIMACIONES ===== */
+.score-animate {
+  animation: scorePop 0.3s ease;
+}
+@keyframes scorePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); color: #ffd200; }
+  100% { transform: scale(1); }
+}
+
+/* ===== HR ===== */
+#hrAnimation {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+ 
+#replayAnimation {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9998;
+}
+
+#replayLabel {
+  font-size: 42px;
+  font-weight: bold;
+  letter-spacing: 6px;
+  margin-bottom: 20px;
+  color: #ffd200;
+  animation: replayBlink 1s infinite;
+}
+
+@keyframes replayBlink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+#replayLogo {
+  width: 280px;
+  height: 280px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: replaySlow 3s ease-in-out infinite;
+}
+
+@keyframes replaySlow {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(0.9); }
+}
+
+#hrLogo {
+  width: 260px;
+  height: 260px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 3;
+  animation: logoZoom 2.2s ease forwards;
+}
+
+@keyframes logoZoom {
+  0% { transform: scale(0.2); opacity: 0; }
+  60% { transform: scale(1.6); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.fireworks {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  pointer-events: none;
+}
+
+.fireworks span {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffd200;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  animation: firework 1.8s ease-out infinite;
+}
+
+.fireworks span:nth-child(1) { transform: rotate(0deg) translateX(0); }
+.fireworks span:nth-child(2) { transform: rotate(45deg) translateX(0); }
+.fireworks span:nth-child(3) { transform: rotate(90deg) translateX(0); }
+.fireworks span:nth-child(4) { transform: rotate(135deg) translateX(0); }
+.fireworks span:nth-child(5) { transform: rotate(180deg) translateX(0); }
+.fireworks span:nth-child(6) { transform: rotate(225deg) translateX(0); }
+.fireworks span:nth-child(7) { transform: rotate(270deg) translateX(0); }
+.fireworks span:nth-child(8) { transform: rotate(315deg) translateX(0); }
+
+@keyframes firework {
+  0% {
+    transform: rotate(var(--r)) translateX(0) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--r)) translateX(160px) scale(1.4);
+    opacity: 0;
+  }
+}
+
+.fireworks::after { animation-delay: 60s; }
+
+@keyframes explode {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(10); opacity: 0; }
+}
+#hrText {
+  position: relative;
+  z-index: 3;
+  font-size: 72px;
+  font-weight: 900;
+  color: #ffd200;
+  letter-spacing: 8px;
+  margin-bottom: 30px;
+  text-shadow: 0 0 25px #000;
+  animation: hrTextIn 1.8s ease forwards;
+}
+
+@keyframes hrTextIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti span {
+  position: absolute;
+  top: -10%;
+  width: 12px;
+  height: 18px;
+  background: red;
+  animation: confettiFall 3.5s linear infinite;
+  opacity: 0.9;
+}
+
+.confetti span:nth-child(odd) { background: #ffd200; }
+.confetti span:nth-child(even) { background: #00b3ff; }
+
+.confetti span:nth-child(1) { left: 10%; animation-delay: 0s; }
+.confetti span:nth-child(2) { left: 20%; animation-delay: .3s; }
+.confetti span:nth-child(3) { left: 30%; animation-delay: .6s; }
+.confetti span:nth-child(4) { left: 40%; animation-delay: .9s; }
+.confetti span:nth-child(5) { left: 50%; animation-delay: 1.2s; }
+.confetti span:nth-child(6) { left: 60%; animation-delay: 1.5s; }
+.confetti span:nth-child(7) { left: 70%; animation-delay: 1.8s; }
+.confetti span:nth-child(8) { left: 80%; animation-delay: 2.1s; }
+.confetti span:nth-child(9) { left: 90%; animation-delay: 2.4s; }
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(120vh) rotate(720deg); }
+}
+#confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 2;
+}
+
+#confetti span {
+  position: absolute;
+  top: -20px;
+  width: 14px;
+  height: 20px;
+  opacity: 0.9;
+  animation: confettiFall 4.5s linear infinite;
+}
+
+#confetti span:nth-child(odd) { background: #ffd200; }
+#confetti span:nth-child(even) { background: #00b3ff; }
+
+#confetti span:nth-child(1) { left: 10%; animation-delay: 0s; }
+#confetti span:nth-child(2) { left: 20%; animation-delay: .5s; }
+#confetti span:nth-child(3) { left: 30%; animation-delay: 1s; }
+#confetti span:nth-child(4) { left: 40%; animation-delay: 1.5s; }
+#confetti span:nth-child(5) { left: 50%; animation-delay: 2s; }
+#confetti span:nth-child(6) { left: 60%; animation-delay: 2.5s; }
+#confetti span:nth-child(7) { left: 70%; animation-delay: 3s; }
+#confetti span:nth-child(8) { left: 80%; animation-delay: 3.5s; }
+#confetti span:nth-child(9) { left: 90%; animation-delay: 4s; }
+
+@keyframes confettiFall {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(120vh) rotate(720deg); }
+}
+#fireworks {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+#fireworks span {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ffd200;
+  border-radius: 50%;
+  animation: explode 2.5s ease-out infinite;
+}
+
+#fireworks span:nth-child(1) { top: 30%; left: 40%; }
+#fireworks span:nth-child(2) { top: 50%; left: 60%; }
+#fireworks span:nth-child(3) { top: 40%; left: 30%; }
+#fireworks span:nth-child(4) { top: 60%; left: 50%; }
+#fireworks span:nth-child(5) { top: 35%; left: 70%; }
+
+@keyframes explode {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(12); opacity: 0; }
+}
+
+@keyframes gifPop {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ===============================
+   COMMERCIAL VIDEO FULLSCREEN
+================================ */
+
+/*#commercial-layer {
+  position: fixed;
+  inset: 0;
+  background: black;
+  z-index: 9999;
+  display: none;
+  pointer-events: none;
+}*/
+
+/*#commercialVideo {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background: black;
+  z-index: 9999;
+  display: none;        /* 🔥 CLAVE */
+  visibility: hidden;  /* 🔥 CLAVE */
+  pointer-events: none;/* 🔥 CLAVE */
+}*/
+
+/*#commercialVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}*/
+#effects-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  pointer-events: none;
+  z-index: 2000;
+}
+/* ===== FIX DEFINITIVO TEXTO BLANCO ===== */
+#overlay-root,
+#overlay-root span,
+#overlay-root div {
+  color: #ffffff !important;
+}
+
+/* =====================================
+   MLB LOWER THIRD
+===================================== */
+
+#mlb-lower-third {
+
+  position: fixed;
+
+  left: 40px;
+  bottom: 40px;
+
+  min-width: 520px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,0,0,.92),
+      rgba(0,40,80,.95)
+    );
+
+  border-left:
+    6px solid #ffd200;
+
+  border-radius: 14px;
+
+  padding: 18px;
+
+  display: none;
+
+  z-index: 99999;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.5);
+
+}
+
+#mlb-player-name {
+
+  font-size: 34px;
+
+  font-weight: 900;
+
+  color: white;
+
+  margin-bottom: 14px;
+
+}
+
+#mlb-stats-row {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5,1fr);
+
+  gap: 10px;
+
+}
+
+#mlb-stats-row div {
+
+  background:
+    rgba(255,255,255,.08);
+
+  border-radius: 10px;
+
+  padding: 10px;
+
+  text-align: center;
+
+}
+
+#mlb-stats-row span {
+
+  display: block;
+
+  margin-top: 6px;
+
+  font-size: 24px;
+
+  font-weight: bold;
+
+  color: #ffd200;
+
+}
+
+/* =========================
+   STATS JUGADOR LADO MARCADOR
+========================= */
+#batting-overlay {
+  position: relative;
+  margin-left: 14px;
+  display: none;   /*Tenia flex*/
+  align-items: center;
+}
+
+/* =====================================
+   ADVANCED STATS OVERLAY
+===================================== */
+
+#advanced-stats-overlay {
+
+  position: fixed;
+
+  bottom: 40px;
+  left: 40px;
+
+  width: 460px;
+
+  padding: 20px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(5,15,30,0.95),
+    rgba(0,40,80,0.95)
+  );
+
+  border-left: 6px solid #ffd200;
+
+  border-radius: 14px;
+
+  display: none;
+
+  z-index: 5000;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+#advanced-player-name {
+  font-size: 34px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.advanced-grid div {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.advanced-grid span {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.advanced-grid b {
+  font-size: 28px;
+  color: #ffd200;
+}
+
+#batting-stats {
+  width: 300px;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.85),
+    rgba(0,0,0,0.4)
+  );
+  border-left: 5px solid #ffd200;
+  padding: 10px 12px;
+  border-radius: 0 8px 8px 0;
+}
+
+/* ===== STATS ===== */
+#batting-stats {
+  background: rgba(0,0,0,0.55);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+#batting-stats .player-name {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 14px;
+}
+
+/* ===== DIAMANTE ===== */
+
+/* POSICIONES */
+#field-diamond div {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 22px;
+}
+
+/* COORDENADAS */
+.second { top: 20px; left: 120px; }
+.shortstop { top: 70px; left: 80px; }
+.third { top: 110px; left: 40px; }
+.first { top: 110px; left: 200px; }
+
+.lf { top: 40px; left: 20px; }
+.cf { top: 0; left: 120px; }
+.rf { top: 20px; left: 220px; }
+
+.pitcher { top: 90px; left: 120px; }
+.catcher { top: 150px; left: 120px; }
+
+#field-diamond {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: auto;
+}
+
+/* POSICIONES */
+.pos {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#batting-stats {
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.85),
+    rgba(0,0,0,0.4)
+  );
+  border-left: 5px solid #ffd200;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.player-name {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.stats-row span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #dcdcdc;
+}
+
+.stats-row b {
+  font-size: 30px;       /* 🔥 NÚMERO PROTAGONISTA */
+  font-weight: 900;
+  color: #ffd200;
+  margin-left: 6px;
+  text-shadow: 0 0 12px rgba(255,210,0,0.6);
+}
+.pos {
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  border: 2px solid #000;
+  text-transform: uppercase;
+}
+
+/* =========================
+   CAMPO TV GRANDE
+========================= */
+#tv-field {
+  position: relative;   /* 🔥 CAMBIO CLAVE */
+
+  width: 70vw;
+  max-width: 900px;
+  aspect-ratio: 1 / 1;
+
+  pointer-events: none;
+  z-index: 1;
+
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+/* ===== WRAPPER CENTRADOR TV FIELD ===== */
+#field-wrapper {
+  position: fixed;
+  inset: 0;
+
+  display: none;    /*flex*/
+  justify-content: center;
+  align-items: center;
+
+  pointer-events: none;
+  z-index: 1;
+}
+#field-wrapper.active{
+  display: flex;
+}
+
+
+/*
+#tv-field {
+  position: relative; /*fixed*/
+
+  /* 🔥 CENTRO REAL DE LA PANTALLA */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 70vw;
+  max-width: 900px;   /*1800*/
+  aspect-ratio: 1 / 1;
+
+  pointer-events: none;
+  z-index: 1;  /*1200*/
+  opacity: 0;
+  transition: opacity 0.4s ease;
+
+}
+*/
+#tv-field-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#tv-field img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* jugadores */
+.tv-player {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #1e90ff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 8px 16px;
+  border-radius: 22px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  z-index: 10;          /* 🔥 MÁS ALTO QUE EL CAMPO 50*/
+  pointer-events: none; /* opcional */
+}
+/* COORDENADAS TV */
+/*.tv-player[data-pos="P"]  { top: 55%; left: 50%; }*/
+/*.tv-player[data-pos="C"]  { top: 70%; left: 50%; }*/
+
+/*.tv-player[data-pos="1B"] { top: 58%; left: 59%; }*/
+/*.tv-player[data-pos="2B"] { top: 46%; left: 56%; }*/
+/*.tv-player[data-pos="SS"] { top: 46%; left: 44%; }*/
+/*.tv-player[data-pos="3B"] { top: 58%; left: 37%; }*/
+
+/*.tv-player[data-pos="LF"] { top: 40%; left: 28%; }*/
+/*.tv-player[data-pos="CF"] { top: 20%; left: 50%; }*/
+/*.tv-player[data-pos="RF"] { top: 26%; left: 72%; }*/
+
+.posicion {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+/* 🔥 FIX DEFINITIVO NOMBRES */
+.posicion .pin {
+  position: relative;
+}
+/* =========================
+   PINES NUMERADOS (TV FIELD)
+========================= */
+
+.posicion.p1 { top: 53%; left: 57%; }  /* P */
+.posicion.p2 { top: 64%; left: 57%; }  /* C */
+
+.posicion.p3 { top: 55%; left: 70%; }  /* 1B */
+.posicion.p4 { top: 47%; left: 65%; }  /* 2B */
+.posicion.p5 { top: 55%; left: 43%; }  /* 3B */
+.posicion.p6 { top: 47%; left: 49%; }  /* SS */
+
+.posicion.p7 { top: 40%; left: 30%; }  /* LF */
+.posicion.p8 { top: 38%; left: 57%; }  /* CF */
+.posicion.p9 { top: 40%; left: 80%; }  /* RF */
+
+.posicion .label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  background: #2b2bff;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 18px;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+  display: none;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+
+/* CONTENEDOR REAL DEL CAMPO (REFERENCIA) */
+#tv-field-container {
+  position: relative;   /* 🔥 CLAVE */
+  width: 100%;
+  height: 100%;
+}
+
+#tv-dynamic-players {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tv-dynamic-player {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #00b3ff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 8px 18px;
+  border-radius: 22px;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+.posicion .label,
+.tv-player {
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+/* =========================
+   POSICIONES OVERLAY ENTRADAS
+========================= */
+
+/* ARRIBA */
+.overlay-top {
+  top: 0;
+  left: 0;
+  justify-content: center;
+}
+
+/* ABAJO */
+.overlay-bottom {
+  bottom: 0;
+  left: 0;
+  top: auto;
+  justify-content: center;
+}
+
+/* IZQUIERDA */
+.overlay-left {
+  top: 0;
+  left: 0;
+  height: 100vh;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* DERECHA */
+.overlay-right {
+  top: 0;
+  right: 0;
+  left: auto;
+  height: 100vh;
+  align-items: center;
+  justify-content: flex-end;
+}
+/* ROTAR OVERLAY CUANDO ESTÁ A LOS LADOS */
+.overlay-left #overlay-bar {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.overlay-right #overlay-bar {
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+/* === ESQUINAS PRO === */
+.overlay-top-left {
+  top: 20px;
+  left: 20px;
+}
+
+.overlay-top-right {
+  top: 20px;
+  right: 20px;
+  left: auto;
+}
+
+.overlay-bottom-left {
+  bottom: 20px;
+  left: 20px;
+  top: auto;
+}
+
+.overlay-bottom-right {
+  bottom: 20px;
+  right: 20px;
+  left: auto;
+  top: auto;
+}
+
+/* animación PRO */
+#overlay-root {
+  transition: all 0.4s ease-in-out;
+}
+.overlay-top-left,
+.overlay-top-right,
+.overlay-bottom-left,
+.overlay-bottom-right {
+  animation: overlayIn 0.4s ease-out;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+/* =========================
+   CENTRO TV (BSO / INNING / BASES)
+========================= */
+#center-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 160px;
+  text-align: center;
+}
+
+/* CONTADORES */
+#counts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.countItem {
+  font-size: 42px;          /* 🔥 más grande 38*/
+  font-weight: 900;
+  letter-spacing: 2px;
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*gap: 2px;*/
+}
+
+#counts {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+/* OUTS */
+.outs {
+  display: flex;
+  gap: 4px;
+}
+
+/* ENTRADA */
+#inningBox {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+#inningText {
+  font-size: 32px;
+}
+
+/* BASES */
+#bases {
+  margin-top: 2px;
+}
+#tv-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  z-index: 20;
+
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255,0,0,0.35) 2px, transparent 2px),
+    linear-gradient(to bottom, rgba(255,0,0,0.35) 2px, transparent 2px);
+
+  background-size:
+    50px 50px,   /* grid fino */
+    50px 50px,
+    200px 200px, /* grid maestro */
+    200px 200px;
+}
+.player-stats-advanced,
+.player-stats-extra {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #fff;
+  opacity: 0.9;
+}
+
+.player-stats-advanced b,
+.player-stats-extra b {
+  color: #ffd700;
+}
+#alBatBanner {
+  position: relative;
+  background: linear-gradient(90deg, #ffd200, #ffea80, #ffd200);
+  color: #000 !important;
+  font-weight: 900;
+  font-size: 18px;
+  padding: 8px 22px;
+  border-radius: 40px;
+  display: none;
+  animation: alBatSlide 0.45s ease-out;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  border: 2px solid #fff;
+}
+
+@keyframes alBatSlide {
+  from { opacity: 0; transform: translateY(-18px) scale(0.85); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes alBatIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+#alBatBanner,
+.player-name {
+  animation: glowText 2s infinite ease-in-out alternate;
+  text-shadow: 0 0 4px #ffd200, 0 0 12px #ffd200;
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 6px #ffd200; }
+  to   { text-shadow: 0 0 22px #ffd200; }
+}
+
+/* ==============================
+   PANEL DE ESTADÍSTICAS FIX PRO
+================================ */
+/* =========================
+   PANEL ESTADÍSTICAS FIX PRO
+========================= */
+#batting-overlay {
+  position: fixed;   /* 🔥 CLAVE */
+  display: none;
+  flex-direction: column;
+  width: 340px;
+  padding: 14px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(10,20,40,0.98),
+    rgba(0,40,90,0.98)
+  );
+
+  border-left: 6px solid #ffd200;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+
+  z-index: 3000;  /* 🔥 MÁS ALTO QUE EL OVERLAY */
+  transition: all .35s ease;
+}
+/* ===== POSICIONES SEGÚN ESQUINA ===== */
+
+.overlay-top-left #batting-overlay {
+  top: 220px;
+  left: 20px;
+}
+
+.overlay-top-right #batting-overlay {
+  top: 220px;
+  right: 20px;
+}
+
+.overlay-bottom-left #batting-overlay {
+  bottom: 220px;
+  left: 20px;
+}
+
+.overlay-bottom-right #batting-overlay {
+  bottom: 220px;
+  right: 20px;
+}
+
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateX(15px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+#batting-stats {
+  background: rgba(0,0,0,0.7);
+  border-left: 4px solid #ffd200;
+  padding: 12px 14px;
+  border-radius: 0 8px 8px 0;
+  color: #fff;
+}
+
+.player-name {
+  font-size: 40px;          /* 🔥 GRANDE TV */
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+}
+
+/* FILA PRINCIPAL (AB, H, 2B, 3B, HR, BB, SO) */
+.stats-row span {
+  font-size: 24px;              /* 🔥 SUBE TAMAÑO */
+  font-weight: 700;
+}
+
+/* NÚMEROS MÁS GRANDES QUE ETIQUETA */
+.stats-row b {
+  font-size: 28px;              /* 🔥 NÚMERO DESTACA */
+  font-weight: 900;
+  color: #ffd200;
+  margin-left: 6px;
+  text-shadow: 0 0 10px rgba(255,210,0,0.6);
+}
+
+/* AVG / OBP / SLG */
+.player-stats-advanced {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+
+.player-stats-advanced span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #eaeaea;
+}
+
+.player-stats-advanced b {
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffd200;
+}
+
+/* OPS / RBI / R */
+.player-stats-extra {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.player-stats-extra span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #eaeaea;
+}
+
+.player-stats-extra b {
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffd200;
+}
+/* =========================
+   CAMBIO DE PITCHER PRO
+========================= */
+
+#pitchingChangeAnimation {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.pitching-overlay-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(0,0,0,0.95),
+    rgba(0,30,60,0.95)
+  );
+  animation: fadeInPitcher 0.4s ease forwards;
+}
+
+.pitching-text {
+  position: relative;
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #ffffff;
+  text-transform: uppercase;
+  padding: 30px 80px;
+  border: 4px solid #00b3ff;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.6);
+  text-shadow: 0 0 20px #00b3ff;
+  animation: slidePitcher 0.6s ease forwards;
+}
+
+@keyframes slidePitcher {
+  from {
+    transform: translateY(-150px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInPitcher {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   CENTER SCOREBOARD TV
+========================= */
+
+#centerScoreboard {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+  pointer-events: none;
+}
+
+/* CONTENEDOR */
+.cs-container {
+  width: 550px;
+  /*background: #111;*/
+  background: linear-gradient(to right, #0a223a, #0f355c);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+  animation: csFadeIn 0.4s ease;
+}
+
+/* HEADER */
+.cs-header {
+  background: #0a7a2f;
+  color: #fff;
+  text-align: center;
+  font-weight: 900;
+}
+
+#cs-season {
+  font-size: 24px;
+  padding: 6px;
+}
+
+#cs-game {
+  background: #ddd;
+  color: #000;
+  font-size: 16px;
+  padding: 4px;
+}
+
+/* MAIN */
+.cs-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2b2b2b;
+  padding: 10px;
+}
+
+.cs-team {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cs-team img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.cs-score {
+  font-size: 80px;
+  font-weight: 900;
+  color: #fff;
+  min-width: 80px;
+  text-align: center;
+}
+
+.cs-team div:last-child {
+  font-size: 18px;
+  color: #ccc;
+}
+
+/* FOOTER */
+.cs-footer {
+  background: #0a7a2f;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  padding: 6px;
+}
+
+/* ANIMACIÓN */
+@keyframes csFadeIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+/* OCULTAR SOLO NOMBRES DE EQUIPOS */
+#cs-awayName,
+#cs-homeName {
+  display: none;
+}
+/* =========================
+   INTRO ANIMATION
+========================= */
+#broadcastIntro {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  display: none;
+  z-index: 99999;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* VARIABLES */
+:root {
+  --impact-x: 78vw;
+  --impact-y: 60vh;
+  --center-x: 50vw;
+  --center-y: 50vh;
+}
+
+/* ======================
+   PELOTA (PRO)
+====================== */
+#ball {
+  position: absolute;
+  width: 4vw;
+
+  left: -5vw;
+  top: 65vh;
+
+  transform: translate(-50%, -50%);
+
+  filter:
+    drop-shadow(0 0 6px #fff)
+    drop-shadow(0 0 12px #00b3ff)
+    blur(0.3px);
+
+  animation: ballMove 2.6s linear forwards;
+}
+
+/* ======================
+   ESTELA DE VELOCIDAD
+====================== */
+#ball::after {
+  content: "";
+  position: absolute;
+  width: 120%;
+  height: 40%;
+  background: linear-gradient(to right, rgba(255,255,255,0.6), transparent);
+  left: -100%;
+  top: 30%;
+  filter: blur(6px);
+}
+
+/* ======================
+   BATE
+====================== */
+#bat {
+  position: absolute;
+  width: 22vw;
+
+  left: var(--impact-x);
+  top: var(--impact-y);
+
+  transform-origin: 85% 65%;
+  transform: rotate(25deg);
+
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6));
+
+  animation: batSwing 0.22s ease-out 1.3s forwards;
+}
+
+/* ======================
+   FLASH IMPACTO
+====================== */
+#impactFlash {
+  position: absolute;
+  width: 10vw;
+  height: 10vw;
+
+  left: var(--impact-x);
+  top: var(--impact-y);
+
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+
+  background: radial-gradient(circle,
+    rgba(255,255,255,1) 0%,
+    rgba(0,180,255,0.8) 40%,
+    transparent 70%
+  );
+
+  opacity: 0;
+  animation: flash 0.18s ease-out 1.3s forwards;
+}
+
+/* ======================
+   CHISPAS
+====================== */
+#impactSparks {
+  position: absolute;
+  left: var(--impact-x);
+  top: var(--impact-y);
+  width: 1px;
+  height: 1px;
+}
+
+#impactSparks::before,
+#impactSparks::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ffd200;
+  border-radius: 50%;
+  animation: sparks 0.4s ease-out 1.3s forwards;
+}
+
+#impactSparks::after {
+  background: #00b3ff;
+  animation-delay: 1.32s;
+}
+
+/* ======================
+   ANIMACIONES
+====================== */
+@keyframes ballMove {
+
+  0% { left: -5vw; top: 65vh; }
+
+  40% { left: 40vw; top: 55vh; }
+
+  /* IMPACTO */
+  50% { left: var(--impact-x); top: var(--impact-y); }
+
+  /* SALE ARRIBA IZQUIERDA */
+  70% {
+    left: 25vw;
+    top: -10vh;
+    opacity: 0;
+  }
+
+  /* REAPARECE CENTRO */
+  71% {
+    left: var(--center-x);
+    top: var(--center-y);
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 1;
+  }
+
+  /* ZOOM */
+  100% {
+    left: var(--center-x);
+    top: var(--center-y);
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 0;
+  }
+}
+
+@keyframes batSwing {
+  0% { transform: rotate(25deg); }
+  100% { transform: rotate(-145deg); }
+}
+
+@keyframes flash {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.4); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+}
+
+@keyframes sparks {
+  0% { transform: translate(0,0); opacity: 1; }
+  100% {
+    transform: translate(
+      calc(30px - 60px * random()),
+      calc(30px - 60px * random())
+    );
+    opacity: 0;
+  }
+}
+
+/* ======================
+   CAMERA SHAKE
+====================== */
+@keyframes shake {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0,0); }
+}
+
+.shake {
+  animation: shake 0.2s ease;
+}
+/* ======================
+   VIDEO FULLSCREEN
+====================== */
+#broadcastVideo {
+  position: fixed;
+  inset: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  object-fit: cover; /* 🔥 tipo TV */
+  background: black;
+
+  z-index: 999999;
+
+  display: none;
+}
+/* ======================
+   REPLAY
+====================== */
+#continuamosAnimation {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+/* CANVAS */
+#fxCanvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/* FLASH */
+#lightFlash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.9), transparent 60%);
+  opacity: 0;
+}
+
+.continuamos-show #lightFlash {
+  animation: flashFX 0.3s ease;
+}
+
+@keyframes flashFX {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* IMAGEN WORLD SERIES */
+#continuamosLogo {
+  width: 850px;
+  max-width: 85vw;
+  opacity: 0;
+  transform: scale(0.2);
+  filter:
+    drop-shadow(0 0 12px #ffffff)
+    drop-shadow(0 0 35px rgba(255,210,0,0.95))
+    drop-shadow(0 0 70px rgba(0,160,255,0.85));
+}
+
+.continuamos-show #continuamosLogo {
+  animation: worldSeriesFX 5.5s ease forwards;
+}
+
+@keyframes worldSeriesFX {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+
+  18% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  78% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(3.8);
+  }
+}
+
+/* =========================
+   FOX SPORTS MATCHUP
+========================= */
+
+#foxMatchBanner {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+
+  width: fit-content;
+  min-width: 0;         /* 🔥 más pequeño */
+  height: 90px;          /* 🔥 más pequeño */
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(2,15,35,0.98),
+      rgba(8,35,70,0.98),
+      rgba(2,15,35,0.98)
+    );
+
+  border-top: 3px solid #ffd200;
+  border-bottom: 3px solid #ffd200;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+
+  padding: 0 22px;
+
+  box-sizing: border-box;
+
+  z-index: 99999;
+
+  overflow: hidden;
+
+  opacity: 0;
+
+  transition:
+    transform .55s cubic-bezier(.2,.8,.2,1),
+    opacity .45s ease;
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.6),
+    0 0 20px rgba(0,179,255,0.20);
+}
+.fox-team {
+  flex: 0 0 auto;
+}
+.fox-team.left {
+  justify-content: flex-start;
+}
+
+.fox-team.right {
+  justify-content: flex-end;
+}
+
+#foxMatchBanner.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.fox-glow {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255,255,255,0.10) 45%,
+      transparent 100%
+    );
+
+  animation: foxSweep 3s linear infinite;
+}
+@keyframes foxSweep {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120%);
+  }
+}
+
+/* EQUIPOS */
+.fox-team {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 2;
+}
+
+/* LOGOS */
+.fox-team img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 3px 8px rgba(0,0,0,0.6));
+}
+
+/* NOMBRES */
+.fox-team span {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* CENTRO */
+.fox-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* LIVE */
+.fox-live {
+  background: #ff0000;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+
+  padding: 3px 10px;
+
+  border-radius: 20px;
+
+  margin-bottom: 2px;
+
+  animation: liveBlink 1s infinite;
+}
+@keyframes liveBlink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* VS */
+.fox-vs {
+  font-size: 34px;
+  font-weight: 900;
+  color: #ffd200;
+
+  text-shadow:
+    0 0 8px rgba(255,210,0,0.7);
+}
+/* =========================================
+   FOX SPORTS BOTTOM PANEL
+========================================= */
+
+#count-panel {
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0.45),
+      rgba(0,20,40,0.65)
+    );
+
+  border-top:
+    1px solid rgba(0,170,255,0.35);
+
+  padding: 10px 24px;
+
+  box-shadow:
+    inset 0 8px 20px rgba(0,170,255,0.08);
+}
+
+/* BOLAS / STRIKES / OUTS */
+
+.count-dot {
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 10px currentColor;
+}
+
+/* BASES */
+
+.base {
+
+  background: #2f2f2f !important;
+
+  border:
+    1px solid rgba(255,255,255,0.15);
+
+  transform: rotate(45deg);
+}
+
+.base.active {
+
+  background: #ffd200 !important;
+
+  box-shadow:
+    0 0 12px rgba(255,210,0,0.7);
+}
+
+/* ANIMACION GLOW */
+
+@keyframes foxSweep {
+
+  from {
+    transform: translateX(-120%);
+  }
+
+  to {
+    transform: translateX(120%);
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+<!-- =========================
+     CAMPO DEFENSIVO TV
+========================= -->
+<div id="field-wrapper">
+  <div id="tv-field">
+    <div id="tv-field-container">
+<!-- POSICIONES DRAG & DROP (DINÁMICAS) -->
+   <div id="tv-dynamic-players"></div>
+
+
+    <img src="assets/campo.png" id="tv-field-bg">
+
+    <div id="tv-grid"></div>    
+<!--
+    <!-- jugadores -->
+    <div class="tv-player" data-pos="P"></div>
+    <div class="tv-player" data-pos="C"></div>
+
+    <div class="tv-player" data-pos="1B"></div>
+    <div class="tv-player" data-pos="2B"></div>
+    <div class="tv-player" data-pos="3B"></div>
+    <div class="tv-player" data-pos="SS"></div>
+
+    <div class="tv-player" data-pos="LF"></div>
+    <div class="tv-player" data-pos="CF"></div>
+    <div class="tv-player" data-pos="RF"></div>
+-->
+<!-- PINES NUMERADOS -->
+<div class="posicion p1">
+  <div class="pin">1<div class="label"></div></div>
+</div>
+<div class="posicion p2">
+  <div class="pin">2<div class="label"></div></div>
+</div>
+<div class="posicion p3">
+  <div class="pin">3<div class="label"></div></div>
+</div>
+<div class="posicion p4">
+  <div class="pin">4<div class="label"></div></div>
+</div>
+<div class="posicion p5">
+  <div class="pin">5<div class="label"></div></div>
+</div>
+<div class="posicion p6">
+  <div class="pin">6<div class="label"></div></div>
+</div>
+<div class="posicion p7">
+  <div class="pin">7<div class="label"></div></div>
+</div>
+<div class="posicion p8">
+  <div class="pin">8<div class="label"></div></div>
+</div>
+<div class="posicion p9">
+  <div class="pin">9<div class="label"></div></div>
+</div>
+
+
+  </div>
+</div>
+</div>
+
+<div id="hrAnimation">
+  <div id="hrText">HOME RUN</div>
+  <div id="hrLogo"></div>
+
+  <div id="confetti">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div id="fireworks">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- =========================
+     CAMBIO DE PITCHER
+========================= -->
+<div id="pitchingChangeAnimation">
+  <div class="pitching-overlay-bg"></div>
+  <div class="pitching-text">
+    CAMBIO DE PITCHER
+  </div>
+</div>
+
+<!-- OVERLAY + GIF -->
+<div id="overlay-root" class="overlay-top-left">
+
+ <div id="advanced-stats-overlay">
+
+  <div id="advanced-player-name"></div>
+
+  <div class="advanced-grid">
+
+    <div>
+      <span>AVG</span>
+      <b id="adv-avg">.000</b>
+    </div>
+
+    <div>
+      <span>AB</span>
+      <b id="adv-ab">0</b>
+    </div>
+
+    <div>
+      <span>H</span>
+      <b id="adv-h">0</b>
+    </div>
+
+    <div>
+      <span>HR</span>
+      <b id="adv-hr">0</b>
+    </div>
+
+    <div>
+      <span>RBI</span>
+      <b id="adv-rbi">0</b>
+    </div>
+
+    <div>
+      <span>BB</span>
+      <b id="adv-bb">0</b>
+    </div>
+
+  </div>
+
+</div>
+
+  <div id="overlay-scale">
+    
+   <div id="overlay-flex">
+
+    <div id="overlay-bar">
+
+      <div id="overlay-title">
+        <span id="title"></span>
+      </div>
+       
+        <div id="overlay-main">
+
+  <!-- VISITANTE -->
+  <div class="fox-team-box left-box">
+
+    <div class="team-side">
+      <div class="logo-wrapper">
+        <img id="awayLogo" class="logo">
+      </div>
+
+      <div class="team-info">
+        <div id="awayName" class="team-name"></div>
+      </div>
+    </div>
+
+    <div id="awayScore" class="team-score"></div>
+
+  </div>
+
+  <!-- CENTRO -->
+  <div id="center-live-box">
+
+    <div id="live-pill">EN VIVO</div>
+
+    <div id="vs-text">VS</div>
+
+    <div id="inning-mini">
+      <span id="inningText"></span>
+    </div>
+
+  </div>
+
+  <!-- LOCAL -->
+  <div class="fox-team-box right-box">
+
+    <div id="homeScore" class="team-score"></div>
+
+    <div class="team-side">
+
+      <div class="team-info">
+        <div id="homeName" class="team-name"></div>
+      </div>
+
+      <div class="logo-wrapper">
+        <img id="homeLogo" class="logo">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- BARRA INFERIOR -->
+<div id="count-panel">
+
+  <div class="count-section">
+
+    <span class="count-label">B</span>
+
+    <div class="dots">
+      <span id="ball1" class="count-dot"></span>
+      <span id="ball2" class="count-dot"></span>
+      <span id="ball3" class="count-dot"></span>
+    </div>
+
+  </div>
+
+  <div class="count-section">
+
+    <span class="count-label">S</span>
+
+    <div class="dots">
+      <span id="strike1" class="count-dot strike"></span>
+      <span id="strike2" class="count-dot strike"></span>
+    </div>
+
+  </div>
+
+  <div class="count-section">
+
+    <span class="count-label">O</span>
+
+    <div class="dots">
+      <span id="out1" class="count-dot out"></span>
+      <span id="out2" class="count-dot out"></span>
+    </div>
+
+  </div>
+
+  <!-- BASES -->
+  <div id="bases-modern">
+
+    <div id="base2" class="base"></div>
+
+    <div class="base-row">
+      <div id="base3" class="base"></div>
+      <div id="base1" class="base"></div>
+    </div>
+
+  </div>
+
+</div>
+      
+    </div> <!-- cierre overlay-bar -->
+
+  </div> <!-- cierre overlay-flex -->
+
+<!-- =========================
+     ZONA BATEO / DEFENSIVA
+========================= -->
+<div id="batting-overlay">
+
+<!-- ===== BANNER AL BAT ===== -->
+<div id="alBatBanner">
+  ⚾ AL BAT · <span id="alBatName">JUGADOR</span>
+</div>
+
+  <!-- ESTADÍSTICAS DEL JUGADOR -->
+  <div id="batting-stats">
+  <div class="player-name">JUGADOR</div>
+  <div class="stats-row">
+    <span>AB <b id="stat-ab">0</b></span>
+    <span>H <b id="stat-h">0</b></span>
+    <span>2B <b id="stat-2b">0</b></span>
+    <span>3B <b id="stat-3b">0</b></span>
+    <span>HR <b id="stat-hr">0</b></span>
+    <span>BB <b id="stat-bb">0</b></span>
+    <span>SO <b id="stat-so">0</b></span>
+  </div>
+
+ <div class="player-stats-advanced">
+  <span>AVG <b>.000</b></span>
+  <span>OBP <b>.000</b></span>
+  <span>SLG <b>.000</b></span>
+</div>
+
+<div class="player-stats-extra">
+  <span>OPS <b>.000</b></span>
+  <span>RBI <b>0</b></span>
+  <span>R <b>0</b></span>
+</div>
+
+</div>
+</div>
+
+</div>
+    <div id="gif-zone">
+      <img id="gif-image" />
+    </div>
+
+<!-- =========================
+     SCOREBOARD CENTRO TV
+========================= -->
+<div id="centerScoreboard">
+
+  <div class="cs-container">
+
+    <!-- HEADER -->
+    <div class="cs-header">
+      <div id="cs-season">TEMPORADA 105</div>
+      <div id="cs-game">JUEGO #13</div>
+    </div>
+
+    <!-- MARCADOR -->
+    <div class="cs-main">
+
+      <!-- VISITANTE -->
+      <div class="cs-team left">
+        <img id="cs-awayLogo">
+        <div id="cs-awayScore" class="cs-score">0</div>
+        <div id="cs-awayName">POTROS</div>
+      </div>
+
+      <!-- LOCAL -->
+      <div class="cs-team right">
+        <div id="cs-homeScore" class="cs-score">0</div>
+        <img id="cs-homeLogo">
+        <div id="cs-homeName">GUERREROS</div>
+      </div>
+
+    </div>
+
+    <div class="cs-footer">MARCADOR</div>
+
+  </div>
+
+</div>
+<!-- =========================
+     INTRO BEISBOL FOX
+========================= -->
+<div id="broadcastIntro">
+
+  <!-- PELOTA -->
+  <img src="assets/baseball.png" id="ball">
+  <!-- BATE -->
+  <img src="assets/bat.png" id="bat">
+  <div id="impactFlash"></div>
+  <div id="impactSparks"></div>
+
+</div>
+<audio id="hitSound" src="assets/hit.mp3"></audio>
+
+<!-- =========================
+     VIDEO FULLSCREEN
+========================= -->
+<video id="broadcastVideo" playsinline></video>
+
+<!-- =========================
+     REPLAY
+========================= -->
+<div id="continuamosAnimation">
+  <canvas id="fxCanvas"></canvas>
+  <div id="lightFlash"></div>
+  <img id="continuamosLogo" src="assets/NCS-26-MX-latin-world-series-FINAL-main.png">
+</div>
+
+<!-- =====================================
+     MLB LOWER THIRD
+===================================== -->
+
+<div id="mlb-lower-third">
+
+  <div id="mlb-player-name">
+    JUGADOR
+  </div>
+
+  <div id="mlb-stats-row">
+
+    <div>
+      AVG
+      <span id="mlb-avg">.000</span>
+    </div>
+
+    <div>
+      OPS
+      <span id="mlb-ops">.000</span>
+    </div>
+
+    <div>
+      HR
+      <span id="mlb-hr">0</span>
+    </div>
+
+    <div>
+      RBI
+      <span id="mlb-rbi">0</span>
+    </div>
+
+    <div>
+      ERA
+      <span id="mlb-era">0.00</span>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     FOX MATCH BANNER
+========================= -->
+<div id="foxMatchBanner">
+
+  <div class="fox-glow"></div>
+
+  <div class="fox-team left">
+    <img id="foxAwayLogo" src="">
+    <span id="foxAwayName">VISITANTE</span>
+  </div>
+
+  <div class="fox-center">
+    <div class="fox-live">EN VIVO</div>
+    <div class="fox-vs">VS</div>
+  </div>
+
+  <div class="fox-team right">
+    <span id="foxHomeName">LOCAL</span>
+    <img id="foxHomeLogo" src="">
+  </div>
+
+</div>
+
+<script src="fx-engine.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyAX9PvUVGnpKYAR0Y4T1GOMRSNWeW8wU8w",
+  authDomain: "beisbol-overlay.firebaseapp.com",
+  projectId: "beisbol-overlay"
+});
+
+//if (firebase.auth) {
+//  firebase.auth().onAuthStateChanged(user => {
+    // El overlay NO redirige ni bloquea
+    // Solo ignora el estado
+//  });
+//}
+
+const db = firebase.database();
+const gameRef = db.ref("gameState");
+const statsRef = gameRef.child("advancedStats");
+const mlbRef = gameRef.child("mlb");
+
+/*firebase.database().ref("commercial").set({*/
+  /*play: false,*/
+  /*url: ""*/
+/*});*/
+firebase.database().ref("commercial").once("value", snap => {
+  if (!snap.exists()) {
+    firebase.database().ref("commercial").set({
+      play: false,
+      video: ""
+    });
+  }
+});
+
+function calculateAVG(stats){
+
+  const hits =
+    Number(stats.H || 0);
+
+  const atBats =
+    Number(stats.AB || 0);
+
+  if (atBats <= 0)
+    return ".000";
+
+  return (
+    hits / atBats
+  ).toFixed(3);
+
+}
+
+function calculateOPS(stats){
+
+  const H =
+    Number(stats.H || 0);
+
+  const DOUBLE =
+    Number(stats.DOUBLE || 0);
+
+  const TRIPLE =
+    Number(stats.TRIPLE || 0);
+
+  const HR =
+    Number(stats.HR || 0);
+
+  const AB =
+    Number(stats.AB || 0);
+
+  const BB =
+    Number(stats.BB || 0);
+
+  const HBP =
+    Number(stats.HBP || 0);
+
+  const SF =
+    Number(stats.SF || 0);
+
+  /* =========================
+     TOTAL BASES
+  ========================= */
+
+  const singles =
+    H - DOUBLE - TRIPLE - HR;
+
+  const totalBases =
+    singles +
+    (DOUBLE * 2) +
+    (TRIPLE * 3) +
+    (HR * 4);
+
+  /* =========================
+     OBP
+  ========================= */
+
+  const obpDenominator =
+    AB + BB + HBP + SF;
+
+  const obp =
+    obpDenominator > 0
+    ? (
+        (
+          H +
+          BB +
+          HBP
+        ) / obpDenominator
+      )
+    : 0;
+
+  /* =========================
+     SLG
+  ========================= */
+
+  const slg =
+    AB > 0
+    ? totalBases / AB
+    : 0;
+
+  /* =========================
+     OPS
+  ========================= */
+
+  return (
+    obp + slg
+  ).toFixed(3);
+
+}
+
+function calculateERA(stats){
+
+  const innings =
+    stats.IP_OUTS / 3;
+
+  if (innings <= 0)
+    return "0.00";
+
+  return (
+    (stats.ER * 9)
+    / innings
+  ).toFixed(2);
+
+}
+
+const title = document.getElementById("title");
+const awayName = document.getElementById("awayName");
+const homeName = document.getElementById("homeName");
+const awayLogo = document.getElementById("awayLogo");
+const homeLogo = document.getElementById("homeLogo");
+
+const awayScoreEl = document.getElementById("awayScore");
+const homeScoreEl = document.getElementById("homeScore");
+
+const ball1El = document.getElementById("ball1");
+const ball2El = document.getElementById("ball2");
+const ball3El = document.getElementById("ball3");
+
+const strike1El = document.getElementById("strike1");
+const strike2El = document.getElementById("strike2");
+
+const out1El = document.getElementById("out1");
+const out2El = document.getElementById("out2");
+
+const inningTextEl = document.getElementById("inningText");
+
+const base1El = document.getElementById("base1");
+const base2El = document.getElementById("base2");
+const base3El = document.getElementById("base3");
+
+// 🔥 CONTROL DE CAMBIO DE SCORE
+let prevAwayScore = 0;
+let prevHomeScore = 0;
+
+gameRef.on("value", snap => {
+  const g = snap.val();
+  if (!g) return;
+
+  title.innerText = g.title || "";
+  title.style.display = g.showTitle ? "block" : "none";
+
+  awayName.innerText = g.away.name;
+  homeName.innerText = g.home.name;
+
+// 🔥 DETECTAR CAMBIO DE SCORE
+if (g.away.score !== prevAwayScore) {
+  triggerShine(awayLogo);
+  prevAwayScore = g.away.score;
+}
+
+if (g.home.score !== prevHomeScore) {
+  triggerShine(homeLogo);
+  prevHomeScore = g.home.score;
+}
+
+awayScoreEl.innerText = g.away?.score ?? 0;
+homeScoreEl.innerText = g.home?.score ?? 0;
+
+if (g.away?.logo && awayLogo.src !== g.away.logo) {
+  awayLogo.src = g.away.logo;
+}
+
+if (g.home?.logo && homeLogo.src !== g.home.logo) {
+  homeLogo.src = g.home.logo;
+}
+
+const balls = g.balls || 0;
+const strikes = g.strikes || 0;
+const outs = g.outs || 0;
+const bases = g.bases || { first:false, second:false, third:false };
+
+ball1El.classList.toggle("active", balls >= 1);
+ball2El.classList.toggle("active", balls >= 2);
+ball3El.classList.toggle("active", balls >= 3);
+
+strike1El.classList.toggle("active", strikes >= 1);
+strike2El.classList.toggle("active", strikes >= 2);
+
+out1El.classList.toggle("active", outs >= 1);
+out2El.classList.toggle("active", outs >= 2);
+
+inningTextEl.innerText = `${g.inning || 1}ª ${(g.inningSide || "alta").toUpperCase()}`;
+
+base1El.classList.toggle("active", bases.first);
+base2El.classList.toggle("active", bases.second);
+base3El.classList.toggle("active", bases.third);
+
+ // ===== HOME RUN ANIMATION =====
+const hrContainer = document.getElementById("hrAnimation");
+const hrLogo = document.getElementById("hrLogo");
+
+if (g.hr && g.hr.show && hrContainer && hrLogo) {
+
+  hrContainer.style.display = "flex";
+
+  hrLogo.style.backgroundImage =
+    g.hr.team === "away"
+      ? `url(${g.away.logo})`
+      : `url(${g.home.logo})`;
+
+} else if (hrContainer) {
+  hrContainer.style.display = "none";
+}
+
+// ===== REPLAY =====
+//const replayBox = document.getElementById("replayAnimation");
+//const replayLogo = document.getElementById("replayLogo");
+//
+//if (g.replay?.show) {
+//  replayBox.style.display = "flex";
+//
+//  replayLogo.style.backgroundImage =
+//    g.replay.team === "away"
+//      ? `url(${g.away.logo})`
+//     : `url(${g.home.logo})`;
+//
+//} else {
+//  replayBox.style.display = "none";
+//}
+
+/*if (g.hr?.show) {
+  const hr = document.getElementById("hrAnimation");
+  const logo = document.getElementById("hrLogo");
+
+  hr.style.display = "flex";
+
+  logo.style.backgroundImage =
+    g.hr.team === "away"
+      ? `url(${g.away.logo})`
+      : `url(${g.home.logo})`;
+} else if (hrContainer) {
+  hrContainer.style.display = "none";
+}*/
+
+});
+/*ES PARA EL GIF */
+/*gameRef.child("gif").on("value", snap => {
+  const data = snap.val();
+  const zone = document.getElementById("gif-zone");
+  const img = document.getElementById("gif-image");
+
+  if (data && data.show && data.url) {
+    img.src = data.url;
+    zone.style.display = "flex";
+  } else {
+    zone.style.display = "none";
+  }
+});*/
+const root = document.getElementById("overlay-root");
+
+gameRef.child("gif").on("value", snap => {
+  const data = snap.val();
+  const zone = document.getElementById("gif-zone");
+  const img = document.getElementById("gif-image");
+
+  if (data && data.show && data.url) {
+    img.src = data.url;
+    zone.style.display = "flex";
+    /*root.style.width = "1440px";*/
+  } else {
+    zone.style.display = "none";
+    /*root.style.width = "1280px";*/
+  }
+});
+
+/* ===============================
+   COMMERCIAL VIDEO FULLSCREEN
+================================ */
+let commercialVideo = null;
+
+firebase.database().ref("commercial").on("value", snap => {
+  const data = snap.val();
+  if (!data) return;
+
+  // ▶️ MOSTRAR COMERCIAL
+  if (data.play && data.file) {
+
+    // Crear video SOLO si no existe
+    if (!commercialVideo) {
+      commercialVideo = document.createElement("video");
+      commercialVideo.id = "commercialVideo";
+      commercialVideo.muted = true;
+      commercialVideo.playsInline = true;
+      commercialVideo.controls = false;
+
+      Object.assign(commercialVideo.style, {
+        position: "fixed",
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
+        objectFit: "contain",
+        background: "black",
+        zIndex: 9999
+      });
+
+      document.body.appendChild(commercialVideo);
+
+      commercialVideo.onended = () => {
+        firebase.database().ref("commercial/play").set(false);
+      };
+    }
+
+    commercialVideo.src = "videos/" + data.file;
+    commercialVideo.currentTime = 0;
+    commercialVideo.play().catch(() => {});
+
+  } 
+  // ⛔ OCULTAR COMERCIAL
+  else {
+    if (commercialVideo) {
+      commercialVideo.pause();
+      commercialVideo.remove();   // 🔥 CLAVE
+      commercialVideo = null;
+    }
+  }
+
+});
+
+const battingRef = firebase.database().ref("gameState/batting");
+
+mlbRef.on("value", snap => {
+
+  const data = snap.val();
+
+  const overlay =
+    document.getElementById(
+      "mlb-lower-third"
+    );
+
+  if (
+    !data ||
+    !data.showOverlay
+  ){
+
+    overlay.style.display =
+      "none";
+
+    return;
+
+  }
+
+  const players =
+    data.players || {};
+
+  let player = null;
+
+  if (
+    data.overlayType ===
+    "pitcher"
+  ){
+
+    player =
+      players[
+        data.currentPitcher
+      ];
+
+  } else {
+
+    player =
+      players[
+        data.currentBatter
+      ];
+
+  }
+
+  if (!player)
+    return;
+
+  overlay.style.display =
+    "block";
+
+  document
+  .getElementById(
+    "mlb-player-name"
+  )
+  .textContent =
+    player.name;
+
+  document
+  .getElementById(
+    "mlb-avg"
+  )
+  .textContent =
+    calculateAVG(
+      player.batting
+    );
+
+  document
+  .getElementById(
+    "mlb-ops"
+  )
+  .textContent =
+    calculateOPS(
+      player.batting
+    );
+
+  document
+  .getElementById(
+    "mlb-hr"
+  )
+  .textContent =
+    player.batting.HR;
+
+  document
+  .getElementById(
+    "mlb-rbi"
+  )
+  .textContent =
+    player.batting.RBI;
+
+  document
+  .getElementById(
+    "mlb-era"
+  )
+  .textContent =
+    calculateERA(
+      player.pitching
+    );
+
+});
+
+/* ===============================
+   MOSTRAR / OCULTAR CAMPO TV
+================================ */
+const fieldWrapper = document.getElementById("field-wrapper");
+
+gameRef.child("showField").on("value", snap => {
+
+  const show = snap.val();
+
+  if (show === true) {
+    fieldWrapper.classList.add("active");
+    fieldWrapper.style.opacity = "1";
+  } else {
+    fieldWrapper.classList.remove("active");
+    fieldWrapper.style.opacity = "0";
+  }
+
+});
+
+/* ===============================
+   CAMBIO DE PITCHER LISTENER
+================================ */
+
+gameRef.child("pitchingChange").on("value", snap => {
+
+  const show = snap.val();
+  const anim = document.getElementById("pitchingChangeAnimation");
+
+  if (!anim) {
+    console.log("No se encontró pitchingChangeAnimation");
+    return;
+  }
+
+  if (show === true) {
+
+    console.log("Mostrando animación cambio de pitcher");
+
+    anim.style.display = "flex";
+
+    setTimeout(() => {
+      gameRef.child("pitchingChange").set(false);
+    }, 5000);
+
+  } else {
+    anim.style.display = "none";
+  }
+
+});
+
+/* ===============================
+   POSICIONAMIENTO AUTOMÁTICO GIF
+================================ */
+
+function updateGifPosition(overlayPositionClass) {
+
+  const gif = document.getElementById("gif-zone");
+  if (!gif) return;
+
+  gif.classList.remove(
+    "gif-bottom-left",
+    "gif-bottom-right",
+    "gif-top-left",
+    "gif-top-right"
+  );
+
+  switch (overlayPositionClass) {
+
+    case "overlay-bottom-right":
+      gif.classList.add("gif-bottom-left");
+      break;
+
+    case "overlay-bottom-left":
+      gif.classList.add("gif-bottom-right");
+      break;
+
+    case "overlay-top-right":
+      gif.classList.add("gif-top-left");
+      break;
+
+    case "overlay-top-left":
+      gif.classList.add("gif-top-right");
+      break;
+
+    default:
+      gif.classList.add("gif-bottom-left");
+  }
+}
+
+const battingOverlay = document.getElementById("batting-overlay");
+
+// 🔥 REFERENCIAS STATS
+const statAb = document.getElementById("stat-ab");
+const statH  = document.getElementById("stat-h");
+const statHr = document.getElementById("stat-hr");
+const statBb = document.getElementById("stat-bb");
+const statSo = document.getElementById("stat-so");
+const stat2b = document.getElementById("stat-2b");
+const stat3b = document.getElementById("stat-3b");
+
+// 🔥 ESCUCHAR SI HAY BATEADOR ACTIVO
+const alBatBanner = document.getElementById("alBatBanner");
+const alBatName = document.getElementById("alBatName");
+
+battingRef.on("value", snap => {
+  const data = snap.val();
+  if (!data) return;
+
+const overlay =
+  document.getElementById(
+    "battingOverlay"
+  );
+
+if(overlay){
+
+  overlay.style.display =
+    data?.show === false
+    ? "none"
+    : "block";
+
+}
+
+const battingOverlay =
+  document.getElementById(
+    "battingOverlay"
+  );
+
+if(battingOverlay){
+
+  battingOverlay.style.display =
+    data.show === false
+    ? "none"
+    : "block";
+
+}
+
+  const { show, selectedPlayer, players } = data;
+
+  // ⛔ NO hay bateador
+  if (!show || !selectedPlayer || !players?.[selectedPlayer]) {
+    battingOverlay.style.display = "none";
+    alBatBanner.style.display = "none";
+    return;
+  }
+
+/* ===============================
+   MOSTRAR ORDEN AL BAT (LINEUP)
+================================ */
+battingRef.child("order").on("value", snap => {
+
+  const order = snap.val();
+  if (!order) return;
+
+  const firstPlayerId = Object.keys(order)[0];
+  if (!firstPlayerId) return;
+
+  battingRef.child("players/" + firstPlayerId).once("value", pSnap => {
+    const player = pSnap.val();
+    if (!player) return;
+
+    alBatBanner.style.display = "block";
+    alBatName.textContent = player.name;
+  });
+
+});
+
+
+  // 🟢 HAY bateador
+  const p = players[selectedPlayer];
+  const s = p.stats || {};
+
+  battingOverlay.style.display = "flex";
+  alBatBanner.style.display = "block";
+  alBatName.textContent = p.name;
+
+  const AB  = s.AB  || 0;
+  const H   = s.H   || 0;
+  const D2  = s["2B"] || 0;
+  const D3  = s["3B"] || 0;
+  const HR  = s.HR  || 0;
+  const BB  = s.BB  || 0;
+  const SO  = s.SO  || 0;
+  const RBI = s.RBI || 0;
+  const R   = s.R   || 0;
+
+  const AVG = AB ? (H / AB).toFixed(3) : ".000";
+  const OBP = (AB + BB) ? ((H + BB) / (AB + BB)).toFixed(3) : ".000";
+  const SLG = AB ? ((H + HR * 2) / AB).toFixed(3) : ".000";
+  const OPS = (parseFloat(OBP) + parseFloat(SLG)).toFixed(3);
+
+  document.querySelector(".player-name").textContent = p.name;
+
+  statAb.textContent = AB;
+  statH.textContent  = H;
+  stat2b.textContent = D2;
+  stat3b.textContent = D3;
+  statHr.textContent = HR;
+  statBb.textContent = BB;
+  statSo.textContent = SO;
+
+  document.querySelector(".player-stats-advanced").innerHTML = `
+    <span>AVG <b>${AVG}</b></span>
+    <span>OBP <b>${OBP}</b></span>
+    <span>SLG <b>${SLG}</b></span>
+  `;
+
+  document.querySelector(".player-stats-extra").innerHTML = `
+    <span>OPS <b>${OPS}</b></span>
+    <span>RBI <b>${RBI}</b></span>
+    <span>R <b>${R}</b></span>
+  `;
+});
+
+
+battingRef.child("field").on("value", snap => {
+
+// Reset pines numerados
+// Reset pines numerados (labels)
+document.querySelectorAll(".posicion .label").forEach(label => {
+  label.style.display = "none";
+  label.textContent = "";
+});
+
+  // Reset posiciones mini diamante
+  document.querySelectorAll(".pos").forEach(el => {
+    el.textContent = el.dataset.pos;
+    el.style.background = "rgba(255,255,255,0.85)";
+  });
+
+  // Reset campo TV
+  document.querySelectorAll(".tv-player").forEach(el => {
+    el.textContent = "";
+    el.style.display = "none";
+  });
+
+  snap.forEach(posSnap => {
+    const pos = posSnap.key;
+    const playerId = posSnap.val();
+
+    if (typeof playerId !== "string") return;
+
+    battingRef.child("players/" + playerId).once("value", pSnap => {
+      const player = pSnap.val();
+      if (!player) return;
+
+      // MINI DIAMANTE
+      const mini = document.querySelector(`.pos[data-pos="${pos}"]`);
+      if (mini) {
+        mini.textContent = player.name.split(" ")[0];
+        mini.style.background = "#ffd200";
+      }
+
+/*
+     // CAMPO TV (USAR POSICIONES DEL CSS)
+      const tv = document.querySelector(`.tv-player[data-pos="${pos}"]`);
+      if (tv) {
+        tv.textContent = player.name.split(" ")[0];
+        tv.style.display = "flex";
+      }
+*/
+// PINES NUMERADOS (1–9)
+const mapaNumeros = {
+  P: 1,
+  C: 2,
+  "1B": 3,
+  "2B": 4,
+  "3B": 5,
+  SS: 6,
+  LF: 7,
+  CF: 8,
+  RF: 9
+};
+
+const num = mapaNumeros[pos];
+if (num) {
+  const pos = document.querySelector(`.posicion.p${num}`);
+  if (pos) {
+    const label = pos.querySelector(".label");
+    if (label) {
+      label.textContent = player.name;
+      label.style.display = "block";
+    }
+  }
+}
+
+    });
+  });
+
+});
+const posiciones = {
+  1: "Pitcher",
+  2: "Catcher",
+  3: "1B",
+  4: "2B",
+  5: "3B",
+  6: "SS",
+  7: "LF",
+  8: "CF",
+  9: "RF"
+};
+
+Object.keys(posiciones).forEach(num => {
+  const el = document.getElementById(`pos${num}`);
+  if (el) {
+    el.textContent = posiciones[num];
+  }
+});
+/* ===============================
+   CAMPO DRAG & DROP DINÁMICO
+================================ */
+
+const dynamicContainer = document.getElementById("tv-dynamic-players");
+
+battingRef.child("visualPositions").on("value", snap => {
+
+  dynamicContainer.innerHTML = "";
+
+  const data = snap.val();
+  if (!data) return;
+
+  Object.entries(data).forEach(([playerId, pos]) => {
+
+    battingRef.child("players/" + playerId).once("value", pSnap => {
+
+      const player = pSnap.val();
+      if (!player) return;
+
+      const el = document.createElement("div");
+      el.className = "tv-dynamic-player";
+      el.textContent = player.name.split(" ")[0];
+
+      // 🔥 CONVERTIR PIXELES A %
+// 🔥 CONVERSIÓN ESTABLE (CONTROL = 500px base)
+/*
+const BASE_SIZE = 500;
+
+const percentX = (pos.x / BASE_SIZE) * 100;
+const percentY = (pos.y / BASE_SIZE) * 100;
+*/
+el.style.left = pos.x + "%";
+el.style.top  = pos.y + "%";
+
+      dynamicContainer.appendChild(el);
+
+    });
+
+  });
+
+});
+/* ===============================
+   MOSTRAR / OCULTAR CAMPO TV
+================================ */
+db.ref("overlay/showField").on("value", snap => {
+  const show = snap.val();
+  const tvField = document.getElementById("tv-field");
+  if (!tvField) return;
+
+  if (show) {
+    tvField.style.opacity = "1";
+    tvField.style.pointerEvents = "none";
+    tvField.style.display = "block";
+  } else {
+    tvField.style.opacity = "0";
+  }
+});
+
+/* ===============================
+   CAMPO EN MARCADOR (BOTÓN NUEVO)
+================================ */
+db.ref("overlay/showFieldOnScoreboard").on("value", snap => {
+
+  const show = snap.val();
+  const tvField = document.getElementById("tv-field");
+  if (!tvField) return;
+
+  if (show) {
+    tvField.style.display = "block";
+    tvField.style.opacity = "1";
+  } else {
+    tvField.style.opacity = "0";
+    setTimeout(() => {
+      tvField.style.display = "none";
+    }, 400);
+  }
+
+});
+
+db.ref("overlay/showField").on("value", snap => {
+  const show = snap.val();
+
+  const tvField = document.getElementById("tv-field");
+  if (!tvField) return;
+
+  if (show) {
+  tvField.style.opacity = "1";
+  tvField.style.pointerEvents = "none";
+} else {
+  tvField.style.opacity = "0";
+}
+});
+/* =========================
+   POSICIÓN OVERLAY ENTRADAS
+========================= */
+function setOverlayPosition(position) {
+  const root = document.getElementById("overlay-root");
+
+  root.classList.remove(
+    "overlay-top",
+    "overlay-bottom",
+    "overlay-left",
+    "overlay-right",
+    "overlay-top-left",
+    "overlay-top-right",
+    "overlay-bottom-left",
+    "overlay-bottom-right"
+  );
+
+  root.classList.add(position);
+}
+
+/* ===============================
+   ESCUCHAR POSICIÓN OVERLAY
+================================ */
+
+db.ref("overlay/position").on("value", snap => {
+
+  const position = snap.val() || "overlay-top-left";
+
+  root.className = position;
+
+  // 🔥 MOVER GIF AUTOMÁTICAMENTE
+  updateGifPosition(position);
+
+});
+
+function mostrarBateador(jugador) {
+  if (!jugador) return;
+
+  // Nombre
+  document.querySelector(".player-name").textContent = jugador.nombre;
+
+  // Stats básicas
+  document.getElementById("stat-ab").textContent = jugador.AB;
+  document.getElementById("stat-h").textContent = jugador.H;
+  document.getElementById("stat-hr").textContent = jugador.HR;
+  document.getElementById("stat-bb").textContent = jugador.BB;
+  document.getElementById("stat-so").textContent = jugador.SO;
+
+  // Stats avanzadas
+  document.querySelector(".player-stats-advanced").innerHTML = `
+    AVG ${jugador.AVG.toFixed(3)}
+    &nbsp; OBP ${jugador.OBP.toFixed(3)}
+    &nbsp; SLG ${jugador.SLG.toFixed(3)}
+  `;
+
+  document.querySelector(".player-stats-extra").innerHTML = `
+    OPS ${jugador.OPS.toFixed(3)}
+    &nbsp; RBI ${jugador.RBI}
+    &nbsp; R ${jugador.R}
+  `;
+
+  // Mostrar overlay
+  document.getElementById("batting-overlay").style.display = "block";
+}
+function ocultarBateador() {
+  document.getElementById("batting-overlay").style.display = "none";
+}
+// ===============================
+// 🔥 EFECTO BRILLO SOLO CUANDO ANOTA
+// ===============================
+function triggerShine(logoElement) {
+
+  const wrapper = logoElement.parentElement;
+
+  wrapper.classList.add("shine");
+
+  setTimeout(() => {
+    wrapper.classList.remove("shine");
+  }, 1200);
+
+}
+function updateGifPosition(overlayPositionClass) {
+
+  const gif = document.getElementById("gif-zone");
+
+  // Limpiar clases anteriores
+  gif.classList.remove(
+    "gif-bottom-left",
+    "gif-bottom-right",
+    "gif-top-left",
+    "gif-top-right"
+  );
+
+  // Asignar posición OPUESTA al marcador
+  switch (overlayPositionClass) {
+
+    case "overlay-bottom-right":
+      gif.classList.add("gif-bottom-left");
+      break;
+
+    case "overlay-bottom-left":
+      gif.classList.add("gif-bottom-right");
+      break;
+
+    case "overlay-top-right":
+      gif.classList.add("gif-top-left");
+      break;
+
+    case "overlay-top-left":
+      gif.classList.add("gif-top-right");
+      break;
+
+    default:
+      gif.classList.add("gif-bottom-left");
+  }
+}
+
+// ===============================
+// CENTER SCOREBOARD CONTROL
+// ===============================
+
+const centerBoard = document.getElementById("centerScoreboard");
+
+// ESCUCHAR VISIBILIDAD
+firebase.database().ref("overlay/showCenterScoreboard").on("value", snap => {
+  const show = snap.val();
+
+  if (show) {
+    centerBoard.style.display = "flex";
+  } else {
+    centerBoard.style.display = "none";
+  }
+});
+
+/* =====================================
+   ADVANCED STATS OVERLAY
+===================================== */
+
+statsRef.on("value", snap => {
+
+  const data = snap.val();
+
+  if (!data || !data.show || !data.selectedPlayer) {
+
+    document.getElementById("advanced-stats-overlay").style.display = "none";
+
+    return;
+  }
+
+  const player = data.players?.[data.selectedPlayer];
+
+  if (!player) return;
+
+  document.getElementById("advanced-stats-overlay").style.display = "block";
+
+  document.getElementById("advanced-player-name").textContent = player.name;
+
+  const avg = player.batting.AB > 0
+    ? (player.batting.H / player.batting.AB).toFixed(3)
+    : ".000";
+
+  document.getElementById("adv-avg").textContent = avg;
+  document.getElementById("adv-ab").textContent = player.batting.AB;
+  document.getElementById("adv-h").textContent = player.batting.H;
+  document.getElementById("adv-hr").textContent = player.batting.HR;
+  document.getElementById("adv-rbi").textContent = player.batting.RBI;
+  document.getElementById("adv-bb").textContent = player.batting.BB;
+
+});
+
+// SINCRONIZAR DATOS DEL JUEGO
+gameRef.on("value", snap => {
+  const g = snap.val();
+  if (!g) return;
+
+  document.getElementById("cs-awayName").textContent = g.away.name;
+  document.getElementById("cs-homeName").textContent = g.home.name;
+
+  document.getElementById("cs-awayScore").textContent = g.away.score;
+  document.getElementById("cs-homeScore").textContent = g.home.score;
+
+  document.getElementById("cs-awayLogo").src = g.away.logo;
+  document.getElementById("cs-homeLogo").src = g.home.logo;
+
+  document.getElementById("cs-season").textContent = g.title || "TEMPORADA";
+  document.getElementById("cs-game").textContent = "TEMPORADA REGULAR" + (g.gameNumber || "");
+});
+// ===============================
+// INTRO ANIMATION CONTROL
+// ===============================
+const introRef = firebase.database().ref("overlay/intro");
+
+introRef.on("value", snap => {
+  const show = snap.val();
+  const intro = document.getElementById("broadcastIntro");
+  const sound = document.getElementById("hitSound");
+
+  if (show === true) {
+
+    // reset animación
+    intro.style.display = "none";
+    void intro.offsetWidth;
+    intro.style.display = "block";
+
+    // 🔊 sonido EXACTO en impacto
+    setTimeout(() => {
+      sound.currentTime = 0;
+      sound.play().catch(()=>{});
+
+      intro.classList.add("shake");
+      setTimeout(() => intro.classList.remove("shake"), 200);
+
+    }, 1300);
+
+    setTimeout(() => {
+      intro.style.display = "none";
+      introRef.set(false);
+    }, 2600);
+  }
+});
+// ===============================
+// VIDEO FULLSCREEN
+// ===============================
+let broadcastVideo = document.getElementById("broadcastVideo");
+
+firebase.database().ref("overlay/video").on("value", snap => {
+
+  const data = snap.val();
+  if (!data) return;
+
+  // ▶️ PLAY
+  if (data.play === true && data.file) {
+
+    if (broadcastVideo.src !== location.origin + "/assets/" + data.file) {
+      broadcastVideo.src = "assets/" + data.file;
+      broadcastVideo.currentTime = 0;
+    }
+
+    broadcastVideo.style.display = "block";
+    broadcastVideo.play().catch(() => {});
+
+  } 
+  // ⏸️ PAUSA
+  else if (data.play === "pause") {
+    broadcastVideo.pause();
+  }
+  // ⛔ STOP (OCULTAR)
+  else {
+    broadcastVideo.pause();
+    broadcastVideo.style.display = "none";
+    broadcastVideo.src = "";
+  }
+
+});
+// ===============================
+// CONTINUAR
+// ===============================
+//FX.init();
+//firebase.database().ref("overlay/continuamos").on("value", snap => {
+//
+//  if (snap.val()) {
+//    FX.play(); // 🔥 AHORA TODO SE MANEJA AQUÍ
+//  }
+//
+//});
+const FX = {
+  layer: null,
+
+  init() {
+    this.layer = document.getElementById("continuamosAnimation");
+  },
+
+  play() {
+    if (!this.layer) return;
+
+    this.layer.style.display = "flex";
+    this.layer.classList.remove("continuamos-show");
+
+    void this.layer.offsetWidth;
+
+    this.layer.classList.add("continuamos-show");
+
+    setTimeout(() => {
+      this.layer.classList.remove("continuamos-show");
+      this.layer.style.display = "none";
+    }, 5600);
+  },
+
+  playCustom(config) {
+    this.play();
+  }
+};
+
+window.addEventListener("load", () => {
+
+  FX.init(); // 🔥 ahora seguro ya existe el canvas
+
+  firebase.database().ref("overlay/continuamos").on("value", snap => {
+
+    if (snap.val()) {
+      FX.play();
+    }
+
+  });
+
+});
+// ===============================
+// NUEVO PARA EDITOR DE ANIMACIONES
+// ===============================
+firebase.database().ref("overlay/customFX").on("value", snap => {
+
+  const config = snap.val();
+
+  if (config) {
+    FX.playCustom(config);
+  }
+
+});
+/* =========================
+   FOX MATCHUP BANNER
+========================= */
+
+const foxBanner = document.getElementById("foxMatchBanner");
+
+const foxAwayName = document.getElementById("foxAwayName");
+const foxHomeName = document.getElementById("foxHomeName");
+
+const foxAwayLogo = document.getElementById("foxAwayLogo");
+const foxHomeLogo = document.getElementById("foxHomeLogo");
+
+/* MOSTRAR / OCULTAR */
+firebase.database().ref("overlay/matchBanner")
+.on("value", snap => {
+
+  const show = snap.val();
+
+  if (show) {
+    foxBanner.classList.add("show");
+  } else {
+    foxBanner.classList.remove("show");
+  }
+
+});
+
+/* DATOS EQUIPOS */
+firebase.database().ref("gameState")
+.on("value", snap => {
+
+  const g = snap.val() || {};
+
+  foxAwayName.textContent =
+    g.away?.name || "VISITANTE";
+
+  foxHomeName.textContent =
+    g.home?.name || "LOCAL";
+
+  foxAwayLogo.src =
+    g.away?.logo || "";
+
+  foxHomeLogo.src =
+    g.home?.logo || "";
+
+});
+
+</script>
+</body>
+</html>

@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#000000">
-  <title>V9.0.3 Broadcast</title>
-  <link rel="stylesheet" href="../css/app.css?v=903">
+  <title>V10.0.0 Broadcast</title>
+  <link rel="stylesheet" href="../css/app.css?v=1000">
   <style>
     html,body{width:100%;height:100%;margin:0;background:#000;overflow:hidden}
     #stage{position:fixed;inset:0;width:100%;height:100%;background:#000}
     #program,#replayVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}#replayVideo{display:none;z-index:8}#replayVideo.show{display:block}
-    /* El overlay externo usa fondo blanco. Se recorta solo el área real del marcador
-       para que el resto de la página no tape el video. */
-    #overlayViewport{z-index:12;position:absolute;left:20px;top:70px;width:630px;height:185px;overflow:hidden;pointer-events:none;background:transparent}
-    #overlayFrame{position:absolute;left:-20px;top:-70px;width:100vw;height:100vh;border:0;pointer-events:none;background:transparent}
+    /* V10: iframe local transparente a pantalla completa.
+       El marcador conserva su posición y todas sus animaciones. */
+    #overlayViewport{z-index:12;position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none;background:transparent}
+    #overlayFrame{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;background:transparent;color-scheme:normal}
     #fade,#black{z-index:20;position:absolute;inset:0;pointer-events:none}
     #fade{background:#000;opacity:0;transition:opacity .45s linear}
     #fade.show{opacity:1}
@@ -30,13 +30,13 @@
     <div id="fade"></div>
     <div id="black"></div>
   </div>
-  <div id="diagnostic">Iniciando V9…</div>
+  <div id="diagnostic">Iniciando V10…</div>
 
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-  <script src="../config/firebase-config.js?v=903"></script>
-  <script src="../config/app-config.js?v=903"></script>
-  <script src="../js/shared/core.js?v=903"></script>
-  <script src="../js/broadcast/app.js?v=903"></script>
+  <script src="../config/firebase-config.js?v=1000"></script>
+  <script src="../config/app-config.js?v=1000"></script>
+  <script src="../js/shared/core.js?v=1000"></script>
+  <script src="../js/broadcast/app.js?v=1000"></script>
 </body>
 </html>

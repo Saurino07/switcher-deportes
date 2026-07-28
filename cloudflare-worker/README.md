@@ -1,4 +1,4 @@
-# Worker TURN V9.0.2
+# Worker TURN V10.0.0
 
 Reemplaza TODO el código del Worker por `src-index.js` y despliega una sola vez.
 
