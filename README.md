@@ -12,12 +12,12 @@ Sube el contenido interno de esta carpeta a la raíz del repositorio `Saurino07/
 
 ## URLs
 
-- CAM1: `/cam/index.html?cam=cam1&game=partido1&v=1000&code=TU_CODIGO`
-- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1000&code=TU_CODIGO`
-- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1000&code=TU_CODIGO`
-- Director: `/director/index.html?game=partido1&v=1000&code=TU_CODIGO`
-- Diagnóstico: `/broadcast/index.html?game=partido1&v=1000&debug=1&code=TU_CODIGO`
-- PRISM: `/broadcast/index.html?game=partido1&v=1000&code=TU_CODIGO`
+- CAM1: `/cam/index.html?cam=cam1&game=partido1&v=1010&code=TU_CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1010&code=TU_CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1010&code=TU_CODIGO`
+- Director: `/director/index.html?game=partido1&v=1010&code=TU_CODIGO`
+- Diagnóstico: `/broadcast/index.html?game=partido1&v=1010&debug=1&code=TU_CODIGO`
+- PRISM: `/broadcast/index.html?game=partido1&v=1010&code=TU_CODIGO`
 
 ## Nota sobre recursos del overlay
 
