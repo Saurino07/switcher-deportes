@@ -4,7 +4,7 @@
   const game = Switcher.normalizeId(Switcher.qs("game", Switcher.app.defaultGame));
   const cam = Switcher.normalizeId(Switcher.qs("cam", "cam1"), "cam1");
   $("title").textContent = cam.toUpperCase();
-  $("session").textContent = `Partido: ${game} · V11.1.0`;
+  $("session").textContent = `Partido: ${game} · V11.2.0`;
   let db, stream, iceServers = [], heartbeat, devices = [], index = 0, signalRef;
   const peers = new Map(), answering = new Set();
   const log = message => $("log").textContent = `${new Date().toLocaleTimeString()} ${message}\n` + $("log").textContent.slice(0, 3500);
@@ -12,7 +12,7 @@
     const q = +$("quality").value, w = q === 720 ? 1280 : q === 540 ? 960 : 640;
     return {
       audio: $("audioEnabled").checked ? { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } : false,
-      video: { width: { ideal: w }, height: { ideal: q }, frameRate: { ideal: q === 720 ? 20 : q === 540 ? 18 : 15, max: q === 720 ? 20 : q === 540 ? 18 : 15 }, deviceId: $("cameraSelect").value ? { exact: $("cameraSelect").value } : undefined, facingMode: { ideal: "environment" } }
+      video: { width: { ideal: w }, height: { ideal: q }, frameRate: { ideal: q === 720 ? 15 : q === 540 ? 15 : 12, max: q === 720 ? 15 : q === 540 ? 15 : 12 }, deviceId: $("cameraSelect").value ? { exact: $("cameraSelect").value } : undefined, facingMode: { ideal: "environment" } }
     };
   }
   async function loadDevices() {
@@ -65,7 +65,7 @@
       } : {
         maxBitrate: thermal.broadcastVideoBitrate || 1200000,
         maxFramerate: thermal.broadcastMaxFps || 18,
-        scaleResolutionDownBy: 1
+        scaleResolutionDownBy: thermal.broadcastScaleDown || 1.5
       });
       await tuneSender(audioSender, { maxBitrate: thermal.audioBitrate || 48000 });
       peers.set(viewerId, { pc, viewerCandidates });
@@ -89,7 +89,7 @@
       signalRef.on("child_added", snap => answer(snap.key, snap.val()));
       signalRef.on("child_removed", snap => { answering.delete(snap.key); closePeer(snap.key); });
       const presence = db.ref(`switcher/${game}/cameras/${cam}`);
-      const beat = () => presence.update({ online: true, lastSeen: firebase.database.ServerValue.TIMESTAMP, battery: +($("battery").dataset.level || 0), network: navigator.connection?.effectiveType || "unknown", version: "11.1.0", audio: stream.getAudioTracks().length > 0 });
+      const beat = () => presence.update({ online: true, lastSeen: firebase.database.ServerValue.TIMESTAMP, battery: +($("battery").dataset.level || 0), network: navigator.connection?.effectiveType || "unknown", version: "11.2.0", audio: stream.getAudioTracks().length > 0 });
       await presence.onDisconnect().set({ online: false, lastSeen: firebase.database.ServerValue.TIMESTAMP });
       await beat(); heartbeat = setInterval(beat, Switcher.app.cameraHeartbeatMs || 4000);
       db.ref(`switcher/${game}/program`).on("value", snap => {
@@ -104,7 +104,7 @@
       $("mainState").textContent = "EN LÍNEA"; $("mainState").className = "badge good"; $("stop").disabled = false;
       $("audioState").textContent = stream.getAudioTracks().length ? "Audio activo" : "Audio apagado";
       $("audioState").className = `badge ${stream.getAudioTracks().length ? "good" : ""}`;
-      log("Cámara V11.1.0 iniciada");
+      log("Cámara V11.2.0 iniciada");
     } catch (error) {
       $("mainState").textContent = "ERROR"; $("mainState").className = "badge bad"; $("start").disabled = false;
       log(`${error.name}: ${error.message}`);

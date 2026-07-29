@@ -1,4 +1,4 @@
-# Switcher Deportivo V11.1 — Replay corregido y perfil térmico
+# Switcher Deportivo V11.2 — Replay corregido y perfil térmico
 
 Esta versión conserva la funcionalidad de V11 y corrige:
 
@@ -10,4 +10,4 @@ Esta versión conserva la funcionalidad de V11 y corrige:
 - Buffer de Replay con bitrate reducido para disminuir consumo y temperatura.
 - Audio limitado a 48 kbps.
 
-Suba todo el contenido a la raíz de GitHub Pages y use `v=1110` en las URL para evitar caché.
+Suba todo el contenido a la raíz de GitHub Pages y use `v=1120` en las URL para evitar caché.
