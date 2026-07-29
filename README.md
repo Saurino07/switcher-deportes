@@ -1,13 +1,17 @@
-# Switcher Deportivo V11.2 — Replay corregido y perfil térmico
+# Switcher Deportivo V11.3 — Recorte exacto de Replay
 
-Esta versión conserva la funcionalidad de V11 y corrige:
+Conserva CAM1, CAM2, CAM3, Director, Broadcast directo, overlay, transiciones, modo frío y Replay asistido.
 
-- Contador acumulado real en el PREVIEW de repetición.
-- Muestra segundos solicitados y segundos realmente disponibles.
-- Calidad predeterminada 540p para partidos largos.
-- Miniaturas del Director limitadas a menor bitrate, resolución y FPS.
-- Broadcast directo con perfil de 540p/18 FPS y bitrate controlado.
-- Buffer de Replay con bitrate reducido para disminuir consumo y temperatura.
-- Audio limitado a 48 kbps.
+## Nuevo selector de intervalo
 
-Suba todo el contenido a la raíz de GitHub Pages y use `v=1120` en las URL para evitar caché.
+El panel muestra el buffer disponible como una línea de tiempo. El operador define **Inicio** y **Final** en segundos.
+
+Ejemplo con buffer de 30 s:
+
+- Inicio: 3 s
+- Final: 15 s
+- Fragmento enviado: 12 s
+
+`0 s` representa el video más antiguo del buffer guardado y `30 s` el video más reciente. Primero use PREVIEW y después ENVIAR AL AIRE.
+
+Suba todo el contenido a la raíz de GitHub Pages y use `v=1130` para evitar caché.
