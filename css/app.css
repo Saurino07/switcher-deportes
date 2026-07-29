@@ -7,3 +7,18 @@
 
 /* V11.4 editor modal */
 .modal-replay-editor input[type=range]{width:100%;accent-color:var(--green)}.modal-replay-editor input[type=number]{width:78px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#0d1726;color:#fff;font-weight:800}
+
+
+/* V11.6 Director: no apilar controles en teléfonos cuando está activa la Vista PC. */
+@media(max-width:1000px){
+ html.director-phone-desktop .broadcast-layout{grid-template-columns:2fr 1fr!important}
+}
+@media(max-width:850px){
+ html.director-phone-desktop body{padding:10px!important}
+ html.director-phone-desktop .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ html.director-phone-desktop .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html.director-phone-desktop .menu-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html.director-phone-desktop .switcher-controls{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ html.director-phone-desktop .kpis{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+ html.director-phone-desktop .video-card,html.director-phone-desktop video{min-height:170px!important}
+}
