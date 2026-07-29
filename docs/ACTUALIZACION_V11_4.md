@@ -1,4 +1,4 @@
-# V11.4 Replay profesional
+# V11.5 Replay profesional
 
 - Preview horizontal 16:9 y corrección automática de metadatos verticales.
 - Editor de Inicio/Final integrado dentro de PREVIEW.

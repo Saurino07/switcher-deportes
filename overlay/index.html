@@ -3137,7 +3137,7 @@ firebase.database().ref("commercial").on("value", snap => {
   if (!data) return;
 
   // ▶️ MOSTRAR COMERCIAL
-  if (data.play && data.file) {
+  if (data.play && (data.url || data.file || data.video)) {
 
     // Crear video SOLO si no existe
     if (!commercialVideo) {
@@ -3164,7 +3164,7 @@ firebase.database().ref("commercial").on("value", snap => {
       };
     }
 
-    commercialVideo.src = "videos/" + data.file;
+    commercialVideo.src = /^(https?:|blob:|data:)/i.test(String(data.url || data.video || data.file)) ? String(data.url || data.video || data.file) : "videos/" + data.file;
     commercialVideo.currentTime = 0;
     commercialVideo.play().catch(() => {});
 
@@ -3907,34 +3907,28 @@ introRef.on("value", snap => {
 // ===============================
 let broadcastVideo = document.getElementById("broadcastVideo");
 
-firebase.database().ref("overlay/video").on("value", snap => {
-
-  const data = snap.val();
-  if (!data) return;
-
-  // ▶️ PLAY
-  if (data.play === true && data.file) {
-
-    if (broadcastVideo.src !== location.origin + "/assets/" + data.file) {
-      broadcastVideo.src = "assets/" + data.file;
-      broadcastVideo.currentTime = 0;
-    }
-
+function resolveOverlayVideoSource(data = {}) {
+  const raw = String(data.url || data.file || data.video || "").trim();
+  if (!raw) return "";
+  if (/^(https?:|blob:|data:)/i.test(raw)) return raw;
+  const folder = data.folder || "assets";
+  return `${folder.replace(/\/$/, "")}/${raw.replace(/^\//, "")}`;
+}
+function applyOverlayVideoCommand(data = {}) {
+  const source = resolveOverlayVideoSource(data);
+  broadcastVideo.loop = !!data.loop;
+  broadcastVideo.muted = data.muted !== false;
+  broadcastVideo.style.objectFit = data.fit === "cover" ? "cover" : "contain";
+  if (data.play === true && source) {
+    if (broadcastVideo.src !== new URL(source, location.href).href) { broadcastVideo.src = source; broadcastVideo.currentTime = 0; }
     broadcastVideo.style.display = "block";
     broadcastVideo.play().catch(() => {});
-
-  } 
-  // ⏸️ PAUSA
-  else if (data.play === "pause") {
-    broadcastVideo.pause();
-  }
-  // ⛔ STOP (OCULTAR)
-  else {
-    broadcastVideo.pause();
-    broadcastVideo.style.display = "none";
-    broadcastVideo.src = "";
-  }
-
+  } else if (data.play === "pause") { broadcastVideo.pause(); }
+  else { broadcastVideo.pause(); broadcastVideo.style.display = "none"; broadcastVideo.removeAttribute("src"); broadcastVideo.load(); }
+}
+firebase.database().ref("overlay/video").on("value", snap => applyOverlayVideoCommand(snap.val() || {}));
+window.addEventListener("message", event => {
+  if (event.data?.type === "switcher-overlay-media") applyOverlayVideoCommand(event.data.payload || {});
 });
 // ===============================
 // CONTINUAR

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs><radialGradient id="g"><stop stop-color="#17365f"/><stop offset="1" stop-color="#02060d"/></radialGradient><filter id="glow"><feGaussianBlur stdDeviation="18" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="1920" height="1080" fill="url(#g)"/><g opacity=".25" stroke="#35d6ff" stroke-width="6"><path d="M-100 900L900-100M200 1180L1380 0M700 1200L1980-80"/></g>
+<text x="960" y="430" text-anchor="middle" font-size="220" filter="url(#glow)">⚾</text>
+<text x="960" y="650" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="118" font-weight="900" letter-spacing="18">REPLAY</text>
+<text x="960" y="770" text-anchor="middle" fill="#35d6ff" font-family="Arial,sans-serif" font-size="42" font-weight="700" letter-spacing="9">BÉISBOL</text>
+</svg>
