@@ -4,7 +4,7 @@
   const game = Switcher.normalizeId(Switcher.qs("game", Switcher.app.defaultGame));
   const cam = Switcher.normalizeId(Switcher.qs("cam", "cam1"), "cam1");
   $("title").textContent = cam.toUpperCase();
-  $("session").textContent = `Partido: ${game} · V10.0.0`;
+  $("session").textContent = `Partido: ${game} · V11.0.0`;
   let db, stream, iceServers = [], heartbeat, devices = [], index = 0, signalRef;
   const peers = new Map(), answering = new Set();
   const log = message => $("log").textContent = `${new Date().toLocaleTimeString()} ${message}\n` + $("log").textContent.slice(0, 3500);
@@ -80,7 +80,7 @@
       $("mainState").textContent = "EN LÍNEA"; $("mainState").className = "badge good"; $("stop").disabled = false;
       $("audioState").textContent = stream.getAudioTracks().length ? "Audio activo" : "Audio apagado";
       $("audioState").className = `badge ${stream.getAudioTracks().length ? "good" : ""}`;
-      log("Cámara V10.0.0 iniciada");
+      log("Cámara V11.0.0 iniciada");
     } catch (error) {
       $("mainState").textContent = "ERROR"; $("mainState").className = "badge bad"; $("start").disabled = false;
       log(`${error.name}: ${error.message}`);

@@ -1,24 +1,33 @@
-# Switcher Deportivo V10 Final
+# Switcher Deportivo V11.0.0 — Replay Profesional Asistido
 
-Versión para GitHub Pages, Firebase Realtime Database, Cloudflare TURN y PRISM Live Mobile.
+V11 conserva la funcionalidad de V10.1: tres cámaras, Director con PROGRAM/PREVIEW, CUT/AUTO/FADE/BLACK, cambio limpio entre cámaras, Broadcast a pantalla completa, overlay transparente, Firebase, Cloudflare TURN, Audio Follow Video y salida para PRISM Live Mobile.
 
-## Cambio principal
+## Nuevo replay asistido
 
-El overlay de béisbol está incluido localmente en `overlay/index.html` y se carga como una capa transparente de pantalla completa sobre el video. Ya no se recorta el iframe ni se depende del fondo del dominio externo.
+El Director mantiene un buffer local de PREVIEW de la cámara que está en PROGRAM. Broadcast mantiene su propio buffer para la señal pública.
 
-## Publicación
+Flujo:
 
-Sube el contenido interno de esta carpeta a la raíz del repositorio `Saurino07/switcher-deportes` y reemplaza los archivos existentes.
+1. Espera a que `PREVIEW BUFFER` y `BROADCAST BUFFER` indiquen al menos 4 segundos.
+2. Selecciona duración, velocidad y el punto final de la jugada.
+3. Pulsa **PREVIEW**. Solo el operador ve la repetición; Facebook continúa en LIVE.
+4. Si la jugada es correcta, pulsa **ENVIAR AL AIRE**.
+5. Broadcast hace FADE, muestra `REPLAY`, reproduce la repetición y regresa automáticamente a LIVE.
+6. **VOLVER A LIVE** interrumpe la repetición inmediatamente.
 
-## URLs
+La fuente estable de replay es PROGRAM. Al cambiar PROGRAM se reinicia el buffer para evitar mezclar dos cámaras en una misma repetición.
 
-- CAM1: `/cam/index.html?cam=cam1&game=partido1&v=1010&code=TU_CODIGO`
-- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1010&code=TU_CODIGO`
-- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1010&code=TU_CODIGO`
-- Director: `/director/index.html?game=partido1&v=1010&code=TU_CODIGO`
-- Diagnóstico: `/broadcast/index.html?game=partido1&v=1010&debug=1&code=TU_CODIGO`
-- PRISM: `/broadcast/index.html?game=partido1&v=1010&code=TU_CODIGO`
+## Publicación en GitHub Pages
 
-## Nota sobre recursos del overlay
+Sube todo el contenido de este ZIP a la raíz del repositorio y reemplaza los archivos existentes. Usa `v=1100` en todas las URL.
 
-El marcador principal funciona con el HTML integrado. Algunas animaciones opcionales del overlay original referencian archivos de la carpeta `assets/` que no fueron incluidos en los archivos proporcionados. Esas animaciones requerirán copiar sus recursos originales a `overlay/assets/`.
+- CAM1: `/cam/index.html?cam=cam1&game=partido1&v=1100&code=CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1100&code=CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1100&code=CODIGO`
+- Director: `/director/index.html?game=partido1&v=1100&code=CODIGO`
+- Diagnóstico: `/broadcast/index.html?game=partido1&v=1100&debug=1&code=CODIGO`
+- PRISM: `/broadcast/index.html?game=partido1&v=1100&code=CODIGO`
+
+## Prueba previa
+
+Antes del partido, mantén una cámara en PROGRAM durante 30 segundos, revisa un PREVIEW de 10 segundos a ×0.5, envíalo al aire y confirma el regreso automático a LIVE. Después prueba un cambio de cámara y repite el proceso.
