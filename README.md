@@ -1,4 +1,4 @@
-# Switcher Deportivo V14 · CAM1 Master
+# Switcher Deportivo V14.1 · CAM1 Master
 
 Versión para cuatro teléfonos con CAM1 y la salida final en el mismo dispositivo que transmite mediante PRISM Screencast.
 
@@ -7,4 +7,4 @@ Versión para cuatro teléfonos con CAM1 y la salida final en el mismo dispositi
 - `director/`: switcher y editor profesional de Replay.
 - `broadcast/`: salida heredada de diagnóstico; no se usa en la arquitectura de cuatro teléfonos.
 
-Lee `docs/ACTUALIZACION_V14.md`.
+Lee `docs/ACTUALIZACION_V14.1.md`.
