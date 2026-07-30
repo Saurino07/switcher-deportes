@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#000000">
-  <title>V14.2 CAM1 Master + PRISM Screencast</title>
-  <link rel="stylesheet" href="../css/app.css?v=1420">
+  <title>V14.3 CAM1 Master + PRISM Screencast</title>
+  <link rel="stylesheet" href="../css/app.css?v=1430">
   <style>
     :root{background:#000;color-scheme:dark}html,body{position:fixed;inset:0;margin:0;background:#000;overflow:hidden;width:100%;height:100%;font-family:system-ui}
-    #stage{position:fixed;inset:0;background:#000;overflow:hidden;isolation:isolate}
+    #stage{position:fixed;inset:0;background:#000;overflow:hidden;isolation:auto}
     #programCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:#000;z-index:1}
     .program-layer,#localVideo,#replayVideo{position:absolute;left:-99999px;top:-99999px;width:16px;height:9px;opacity:.001;pointer-events:none}
     #replayVideo{display:block}
-    #overlayViewport{position:absolute;inset:0;z-index:12;pointer-events:none;background:rgba(0,0,0,0)!important;contain:layout paint}#overlayFrame{width:100%;height:100%;border:0;background:rgba(0,0,0,0)!important;color-scheme:normal;display:block}
+    #overlayViewport{position:absolute;inset:0;z-index:12;pointer-events:none;background:rgba(0,0,0,0)!important;contain:none;backface-visibility:hidden}#overlayFrame{width:100%;height:100%;border:0;background:rgba(0,0,0,0)!important;color-scheme:normal;display:block;backface-visibility:hidden;transform:none!important;will-change:auto!important}
     #fade,#black{position:absolute;inset:0;z-index:20;pointer-events:none;background:#000}#fade{opacity:0;transition:opacity .45s linear}#fade.show{opacity:1}#black{opacity:0;transition:opacity .2s linear}#black.show{opacity:1}
     #replayTransition{display:none;position:absolute;inset:0;z-index:30;background:#000;align-items:center;justify-content:center;overflow:hidden}#replayTransition.show{display:flex}#replayTransition img,#replayTransition video{width:100%;height:100%;object-fit:cover;background:#000}#replayTransitionFallback{font:900 clamp(42px,8vw,130px)/1 system-ui;color:#fff;text-align:center;letter-spacing:.08em;text-shadow:0 0 25px #16bfff}#replayTransitionFallback span{display:block;font-size:.36em;margin-top:.4em;color:#35d6ff}
     #replayBug{display:none;position:absolute;left:3%;top:5%;z-index:18;padding:10px 18px;border-radius:7px;background:#d00000;color:#fff;font:900 18px/1 system-ui;letter-spacing:2px}#replayBug.show{display:block}
@@ -32,9 +32,9 @@
     <div id="overlayViewport"><iframe id="overlayFrame" title="Overlay integrado" allow="autoplay; fullscreen" allowtransparency="true" scrolling="no" frameborder="0"></iframe></div>
     <div id="fade"></div><div id="black"></div>
   </div>
-  <section id="setup"><div class="setup-card"><h1>📱 V14.2 CAM1 MASTER</h1><p class="hint">Esta página captura CAM1, la envía al Director, recibe CAM2/CAM3, genera Replay y produce la pantalla final que PRISM transmite mediante <b>Screencast</b>.</p><div class="setup-grid"><label>Calidad CAM1<select id="quality"><option value="720">720p / 24 FPS</option><option value="540" selected>540p / 18 FPS recomendado</option><option value="360">360p / 15 FPS modo frío</option></select></label><label>Audio CAM1<select id="audioMode"><option value="on">Micrófono activo</option><option value="off">Sin micrófono</option></select></label><label>Cámara<select id="cameraSelect"><option value="">Cámara trasera</option></select></label><label>Orientación<select id="fit"><option value="cover">Llenar pantalla</option><option value="contain">Mostrar completo</option></select></label><button id="start" class="start">INICIAR CAM1 MASTER</button></div><p id="setupStatus" class="hint">Autoriza cámara y micrófono. Después activa PRISM Screencast y vuelve a esta página en pantalla completa.</p></div></section>
-  <div id="hud">V14.2 · esperando inicio<small id="hud2">CAM1 Master</small></div>
+  <section id="setup"><div class="setup-card"><h1>📱 V14.3 CAM1 MASTER</h1><p class="hint">Esta página captura CAM1, la envía al Director, recibe CAM2/CAM3, genera Replay y produce la pantalla final que PRISM transmite mediante <b>Screencast</b>.</p><div class="setup-grid"><label>Calidad CAM1<select id="quality"><option value="720">720p / 24 FPS</option><option value="540" selected>540p / 18 FPS recomendado</option><option value="360">360p / 15 FPS modo frío</option></select></label><label>Audio CAM1<select id="audioMode"><option value="on">Micrófono activo</option><option value="off">Sin micrófono</option></select></label><label>Cámara<select id="cameraSelect"><option value="">Cámara trasera</option></select></label><label>Orientación<select id="fit"><option value="cover">Llenar pantalla</option><option value="contain">Mostrar completo</option></select></label><button id="start" class="start">INICIAR CAM1 MASTER</button></div><p id="setupStatus" class="hint">Autoriza cámara y micrófono. Después activa PRISM Screencast y vuelve a esta página en pantalla completa.</p></div></section>
+  <div id="hud">V14.3 · esperando inicio<small id="hud2">CAM1 Master</small></div>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-  <script src="../config/firebase-config.js?v=1420"></script><script src="../config/app-config.js?v=1420"></script><script src="../js/shared/core.js?v=1420"></script><script src="../js/master/app.js?v=1420"></script>
+  <script src="../config/firebase-config.js?v=1430"></script><script src="../config/app-config.js?v=1430"></script><script src="../js/shared/core.js?v=1430"></script><script src="../js/master/app.js?v=1430"></script>
 </body></html>
