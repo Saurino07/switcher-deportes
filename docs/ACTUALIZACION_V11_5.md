@@ -1,4 +1,4 @@
-# V11.5 — Stinger de Replay y Multimedia Externa
+# V14 — Stinger de Replay y Multimedia Externa
 
 - Transición profesional antes/después de Replay por deporte.
 - Presets ligeros incluidos para béisbol, fútbol, básquetbol, fútbol americano y genérico.

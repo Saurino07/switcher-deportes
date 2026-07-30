@@ -1,4 +1,4 @@
-# Actualización V11.6 — Vista PC en celular
+# Actualización V14 — Vista PC en celular
 
 - Conserva exactamente la distribución de escritorio en el Director cuando se abre desde un teléfono o tableta.
 - PROGRAM y PREVIEW permanecen lado a lado.

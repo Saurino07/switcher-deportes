@@ -9,7 +9,7 @@
 .modal-replay-editor input[type=range]{width:100%;accent-color:var(--green)}.modal-replay-editor input[type=number]{width:78px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#0d1726;color:#fff;font-weight:800}
 
 
-/* V11.6 Director: no apilar controles en teléfonos cuando está activa la Vista PC. */
+/* V13 Director: no apilar controles en teléfonos cuando está activa la Vista PC. */
 @media(max-width:1000px){
  html.director-phone-desktop .broadcast-layout{grid-template-columns:2fr 1fr!important}
 }
@@ -22,6 +22,3 @@
  html.director-phone-desktop .kpis{grid-template-columns:repeat(5,minmax(0,1fr))!important}
  html.director-phone-desktop .video-card,html.director-phone-desktop video{min-height:170px!important}
 }
-
-/* V12 CAM1 local en PRISM */
-.local-prism-slate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:radial-gradient(circle at center,#14304d,#050910 72%);text-align:center}.local-prism-slate strong{font-size:clamp(34px,6vw,72px);color:#4aa3ff}.local-prism-slate span{font-weight:900;letter-spacing:.08em}.local-prism-slate small{color:#98abc3}.local-prism-monitor{background:radial-gradient(circle at center,#14304d,#050910 72%)!important}.local-prism-monitor::after{content:"CAM1 LOCAL PRISM"}.prism-local-transparent{background:transparent!important}

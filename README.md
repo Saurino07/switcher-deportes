@@ -1,19 +1,10 @@
-# Switcher Deportivo V12
+# Switcher Deportivo V14 · CAM1 Master
 
-Incluye Replay profesional con recorte Inicio/Final, Preview 16:9, transición gráfica por deporte y reproducción de videos externos por URL dentro del overlay.
+Versión para cuatro teléfonos con CAM1 y la salida final en el mismo dispositivo que transmite mediante PRISM Screencast.
 
-Publica el contenido completo en GitHub Pages y usa `v=1200` en las URLs.
+- `cam1-master/`: salida final, CAM1, replay, overlay, stinger y recepción de CAM2/CAM3.
+- `cam/`: usar para CAM2 y CAM3.
+- `director/`: switcher y editor profesional de Replay.
+- `broadcast/`: salida heredada de diagnóstico; no se usa en la arquitectura de cuatro teléfonos.
 
-
-## V12 · Director con Vista PC en celular
-
-El Director detecta teléfonos y tabletas y conserva automáticamente la misma distribución de escritorio: PROGRAM y PREVIEW lado a lado, tres cámaras en una fila y cuatro controles de transición en una fila. Para operarlo cómodamente, use el teléfono horizontal y acerque con dos dedos cuando necesite leer o pulsar un control pequeño. Las páginas de cámara y Broadcast no cambian.
-
-
-## V12: CAM1 en el mismo teléfono de PRISM
-
-La URL del Web Widget es:
-
-`broadcast/index.html?game=partido1&v=1200&prismCam1=1&code=TU_CODIGO`
-
-CAM1 se usa como cámara nativa de PRISM. CAM2 y CAM3 siguen siendo cámaras web remotas.
+Lee `docs/ACTUALIZACION_V14.md`.
