@@ -1,1 +1,13 @@
-{"name":"Switcher Deportivo V8.5.3","short_name":"Switcher","start_url":"/","display":"standalone","background_color":"#050910","theme_color":"#050910"}
+{
+  "name":"CAM1 Master · Switcher Deportivo V14.4",
+  "short_name":"CAM1 Master",
+  "description":"Salida principal para PRISM Screencast, cámaras remotas, replay y overlay.",
+  "start_url":"./cam1-master/index.html?source=pwa",
+  "scope":"./",
+  "display":"fullscreen",
+  "display_override":["fullscreen","standalone"],
+  "orientation":"landscape",
+  "background_color":"#000000",
+  "theme_color":"#000000",
+  "icons":[{"src":"./assets/icons/cam1-master.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

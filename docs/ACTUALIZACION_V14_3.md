@@ -1,4 +1,4 @@
-# V14.3 — estabilidad de cámara y marcador profesional
+# V14.4 — estabilidad de cámara y marcador profesional
 
 - El canvas conserva el último fotograma válido y ya no se limpia a negro cuando Android entrega un fotograma incompleto.
 - Render limitado a ~24 FPS y resolución de canvas 1x para reducir carga térmica y parpadeo.
