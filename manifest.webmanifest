@@ -1,5 +1,5 @@
 {
-  "name":"CAM1 Master · Switcher Deportivo V14.5",
+  "name":"CAM1 Master · Switcher Deportivo V15.1 Broadcast UI",
   "short_name":"CAM1 Master",
   "description":"Salida principal para PRISM Screencast, cámaras remotas, replay y overlay.",
   "start_url":"./cam1-master/index.html?source=pwa",
