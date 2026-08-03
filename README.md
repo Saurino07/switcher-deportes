@@ -1,4 +1,4 @@
-# Switcher Deportivo V15.1 Broadcast UI — Estabilidad PRISM
+# Switcher Deportivo V15.2 Broadcast UI — Estabilidad PRISM
 
 Conserva la interfaz profesional de V15 y corrige CAM1 Master para ScreenCast:
 
@@ -16,4 +16,4 @@ En PRISM ScreenCast activa **Micrófono** para narración y **Sonido del disposi
 ## Pantalla completa
 Instala CAM1 Master y ábrelo desde su icono. Chrome normal no puede garantizar ocultar su barra al regresar desde PRISM. En PRISM usa **View Screen Full** y orientación horizontal antes de iniciar.
 
-Usa `v=1510`.
+Usa `v=1520`.

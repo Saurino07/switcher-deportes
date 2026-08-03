@@ -1,4 +1,4 @@
-# V15.1 — Fullscreen, audio y optimización térmica
+# V15.2 — Fullscreen, audio y optimización térmica
 
 ## Correcciones
 1. PWA fullscreen y control flotante auto-ocultable.

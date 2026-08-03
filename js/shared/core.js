@@ -24,17 +24,15 @@
     return firebase.database();
   }
   function getAccessCode() {
-    const urlCode = new URLSearchParams(location.search).get("code") || "";
+    const urlCode = (new URLSearchParams(location.search).get("code") || "").trim();
     if (urlCode) {
       sessionStorage.setItem("switcherAccessCode", urlCode);
+      localStorage.setItem("switcherAccessCode", urlCode);
       return urlCode;
     }
-    let code = sessionStorage.getItem("switcherAccessCode") || "";
-    if (!code) {
-      code = (prompt("Código privado del switcher:") || "").trim();
-      if (code) sessionStorage.setItem("switcherAccessCode", code);
-    }
-    if (!code) throw new Error("Se necesita el código privado del switcher. Agrega ?code=TU_CODIGO a la URL de PRISM.");
+    const code = (sessionStorage.getItem("switcherAccessCode") || localStorage.getItem("switcherAccessCode") || "").trim();
+    if (!code) throw new Error("Falta el código privado. Abre primero CAM1 Master desde la URL completa con ?code=TU_CODIGO y vuelve a instalar la aplicación.");
+    sessionStorage.setItem("switcherAccessCode", code);
     return code;
   }
   async function getIceServers({ game, role, clientId }) {
