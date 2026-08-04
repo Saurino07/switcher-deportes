@@ -1,4 +1,4 @@
-# V16.0 — Fullscreen, audio y optimización térmica
+# V16.1 — Fullscreen, audio y optimización térmica
 
 ## Correcciones
 1. PWA fullscreen y control flotante auto-ocultable.

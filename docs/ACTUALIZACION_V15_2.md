@@ -1,4 +1,4 @@
-# V16.0 — Corrección de arranque PWA
+# V16.1 — Corrección de arranque PWA
 
 - Conserva código y partido al instalar la app.
 - Elimina cachés obsoletas.
