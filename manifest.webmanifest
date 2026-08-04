@@ -1,14 +1,25 @@
 {
-  "id":"./cam1-master/",
-  "name":"CAM1 Master · Switcher Deportivo V16.2",
-  "short_name":"CAM1 Master",
-  "description":"Salida principal para PRISM Screencast, cámaras remotas, replay y overlay.",
-  "start_url":"./cam1-master/index.html?source=pwa&v=1620",
-  "scope":"./",
-  "display":"standalone",
-  "display_override":["standalone","fullscreen","minimal-ui"],
-  "orientation":"landscape",
-  "background_color":"#000000",
-  "theme_color":"#000000",
-  "icons":[{"src":"./assets/icons/cam1-master.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "id": "./cam1-master/",
+  "name": "Switcher Deportivo V17 Sports Platform",
+  "short_name": "CAM1 Sports",
+  "description": "Salida principal para PRISM Screencast, cámaras remotas, replay y overlay.",
+  "start_url": "./cam1-master/index.html?v=1700",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "fullscreen",
+    "minimal-ui"
+  ],
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "./assets/icons/cam1-master.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-const CACHE="switcher-v1620";
+const CACHE="switcher-v1700";
 const SHELL=["./","./index.html","./manifest.webmanifest","./assets/icons/cam1-master.svg"];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
