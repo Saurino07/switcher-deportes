@@ -9,6 +9,14 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  background-color: rgba(0,0,0,0) !important;
+}
 body {
   margin: 0;
   background: transparent;
@@ -2378,10 +2386,38 @@ body {
 
 }
 
+
+/* =========================================================
+   V10 EMBEDDED MODE — TRANSPARENCIA REAL SOBRE VIDEO
+   ========================================================= */
+html, body {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: rgba(0,0,0,0) !important;
+  background-color: transparent !important;
+}
+body.v10-embedded {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+}
+body.v10-embedded #overlay-root {
+  background: transparent !important;
+}
+body.v10-embedded #broadcastVideo { display: none !important; }
+/* V16.2: lienzo completo; solo el marcador principal se escala. */
+body.v10-embedded #overlay-root {position:fixed!important;inset:0!important;width:100vw!important;min-width:0!important;height:100vh!important;transform:none!important;}
+body.v10-embedded #overlay-scale {position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;transform:none!important;}
+body.v10-embedded #overlay-flex {position:static!important;display:block!important;width:auto!important;}
+
 </style>
 </head>
 
 <body>
+<script>if(new URLSearchParams(location.search).get("embedded")==="1")document.body.classList.add("v10-embedded");</script>
 <!-- =========================
      CAMPO DEFENSIVO TV
 ========================= -->
@@ -2803,7 +2839,7 @@ body {
 
 </div>
 
-<!-- fx-engine externo retirado: las funciones FX están integradas en este archivo -->
+<!-- fx-engine opcional desactivado en V10 integrado -->
 <script>
 firebase.initializeApp({
   apiKey: "AIzaSyAX9PvUVGnpKYAR0Y4T1GOMRSNWeW8wU8w",
