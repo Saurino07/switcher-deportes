@@ -1,71 +1,63 @@
 (()=>{"use strict";
-const isPhone=()=>/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||navigator.maxTouchPoints>0;
-if(!isPhone()) return;
-document.documentElement.classList.add('director-mobile-console');
-const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
+const isMobile=()=>/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||((navigator.maxTouchPoints||0)>0&&Math.min(screen.width,screen.height)<1000);
+if(!isMobile())return;
+document.documentElement.classList.add("director-mobile-console");
+const ready=fn=>document.readyState==="loading"?document.addEventListener("DOMContentLoaded",fn,{once:true}):fn();
 ready(()=>{
- document.body.classList.add('director-mobile-console');
- const $=id=>document.getElementById(id);
- const q=(s,r=document)=>r.querySelector(s);
- const qa=(s,r=document)=>[...r.querySelectorAll(s)];
- const root=document.createElement('section');
- root.id='mobileDirectorCockpit';
- root.className='mobile-director-cockpit';
+ document.body.classList.add("director-mobile-console");
+ const $=id=>document.getElementById(id),q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+ const root=document.createElement("section"); root.id="mobileBroadcastDirector"; root.className="mobile-broadcast-director";
  root.innerHTML=`
- <div class="mdc-top">
-   <div class="mdc-monitor mdc-program"><div class="mdc-label">PROGRAM</div><video id="mdcProgram" autoplay muted playsinline></video><span id="mdcProgramName">—</span></div>
-   <div class="mdc-monitor mdc-preview"><div class="mdc-label">PREVIEW</div><video id="mdcPreview" autoplay muted playsinline></video><span id="mdcPreviewName">—</span></div>
+ <header class="mbd-header">
+  <div class="mbd-live">EN VIVO</div><div class="mbd-net">● <span id="mbdLatency">— ms</span></div>
+  <div class="mbd-title">DIRECTOR · <span id="mbdGame">PARTIDO</span></div>
+  <div class="mbd-cloud">FIREBASE <span id="mbdInfra">●</span></div><div class="mbd-clock-now" id="mbdNow">--:--</div>
+ </header>
+ <div class="mbd-top-grid">
+  <article class="mbd-monitor program"><div class="mbd-monitor-head"><b>PROGRAM</b><span>EN AIRE</span></div><video id="mbdProgram" autoplay muted playsinline></video><i id="mbdProgramName">—</i></article>
+  <article class="mbd-monitor preview"><div class="mbd-monitor-head"><b>PREVIEW</b><span>VISTA PREVIA</span></div><video id="mbdPreview" autoplay muted playsinline></video><i id="mbdPreviewName">—</i></article>
+  <aside class="mbd-side-controls">
+   <b>SELECCIÓN DE CÁMARA</b><div class="mbd-select-cam"><button data-cam-select="cam1">CAM1</button><button data-cam-select="cam2">CAM2</button><button data-cam-select="cam3">CAM3</button></div>
+   <div class="mbd-transition-status"><small>TRANSICIÓN ACTUAL</small><strong id="mbdTransition">CORTE</strong></div>
+   <div class="mbd-stinger"><small>STINGER / TRANSICIÓN</small><button id="mbdTestStinger">▶ PROBAR TRANSICIÓN</button></div>
+  </aside>
  </div>
- <div class="mdc-cameras" id="mdcCameras">
-   <button data-cam="cam1"><video autoplay muted playsinline></video><b>CAM1</b><small>—</small></button>
-   <button data-cam="cam2"><video autoplay muted playsinline></video><b>CAM2</b><small>—</small></button>
-   <button data-cam="cam3"><video autoplay muted playsinline></video><b>CAM3</b><small>—</small></button>
+ <div class="mbd-source-row">
+  <div class="mbd-source" data-source="cam1"><video autoplay muted playsinline></video><b>CAM1</b><small>—</small></div>
+  <div class="mbd-source" data-source="cam2"><video autoplay muted playsinline></video><b>CAM2</b><small>—</small></div>
+  <div class="mbd-source" data-source="cam3"><video autoplay muted playsinline></video><b>CAM3</b><small>—</small></div>
+  <section class="mbd-replay-quick"><b>REPLAY RÁPIDO</b><div><button data-replay-sec="5">5s</button><button data-replay-sec="10">10s</button><button data-replay-sec="15">15s</button></div><small>VELOCIDAD</small><div><button data-speed="0.25">0.25×</button><button data-speed="0.5">0.5×</button><button class="active" data-speed="1">1×</button></div></section>
  </div>
- <div class="mdc-score">
-   <div class="mdc-team"><small id="mdcAwayName">VISITANTE</small><div><button data-score="away" data-delta="-1">−</button><strong id="mdcAwayScore">0</strong><button data-score="away" data-delta="1">+</button></div></div>
-   <div class="mdc-middle"><span id="mdcSport">BÉISBOL</span><input id="mdcPeriod" value="1"><div><button id="mdcClockStart">▶</button><button id="mdcClockPause">Ⅱ</button><b id="mdcClock">00:00</b></div></div>
-   <div class="mdc-team"><small id="mdcHomeName">LOCAL</small><div><button data-score="home" data-delta="-1">−</button><strong id="mdcHomeScore">0</strong><button data-score="home" data-delta="1">+</button></div></div>
- </div>
- <div class="mdc-baseball" id="mdcBaseball">
-  <button data-count="balls" data-delta="-1">B−</button><b>B <span id="mdcBalls">0</span></b><button data-count="balls" data-delta="1">B+</button>
-  <button data-count="strikes" data-delta="-1">S−</button><b>S <span id="mdcStrikes">0</span></b><button data-count="strikes" data-delta="1">S+</button>
-  <button data-count="outs" data-delta="-1">O−</button><b>O <span id="mdcOuts">0</span></b><button data-count="outs" data-delta="1">O+</button>
- </div>
- <div class="mdc-switch"><button data-action="cut">CUT</button><button data-action="auto">AUTO</button><button data-action="fade">FADE</button><button data-action="black">BLACK</button><button id="mdcFullControl">CONTROL COMPLETO</button></div>`;
- const shell=q('main.shell')||document.body;
- const header=q('.v15-header');
- if(header) header.insertAdjacentElement('afterend',root); else shell.prepend(root);
-
- const syncVideo=(dst,src)=>{ if(!dst||!src)return; if(src.srcObject && dst.srcObject!==src.srcObject){dst.srcObject=src.srcObject;dst.play().catch(()=>{});} };
- const cardFor=id=>{
-   const cards=qa('#cameraGrid > *');
-   return cards.find(c=>(c.dataset.camera||c.id||c.textContent||'').toLowerCase().includes(id));
- };
- const sync=()=>{
-   syncVideo($('mdcProgram'),$('programMonitor')); syncVideo($('mdcPreview'),$('previewMonitor'));
-   $('mdcProgramName').textContent=$('programName')?.textContent||'—'; $('mdcPreviewName').textContent=$('previewName')?.textContent||'—';
-   qa('#mdcCameras [data-cam]').forEach(btn=>{const id=btn.dataset.cam, card=cardFor(id), src=card?.querySelector('video');syncVideo(btn.querySelector('video'),src);btn.querySelector('small').textContent=card?.querySelector('.badge:last-child')?.textContent|| (src?.srcObject?'EN LÍNEA':'SIN SEÑAL');});
- };
- setInterval(sync,500); sync();
- qa('#mdcCameras [data-cam]').forEach(btn=>btn.addEventListener('click',()=>{const card=cardFor(btn.dataset.cam); card?.click();}));
- qa('[data-action]',root).forEach(btn=>btn.onclick=()=>$(btn.dataset.action)?.click());
- $('mdcFullControl').onclick=()=>{q('[data-v15-tab="production"]')?.click(); $('sportsModule')?.scrollIntoView({behavior:'smooth',block:'start'});};
-
- if(!window.firebase||!window.Switcher) return;
- const game=Switcher.normalizeId(Switcher.qs('game',Switcher.app.defaultGame));
- const db=Switcher.initFirebase(); const sportRef=db.ref(`switcher/${game}/sport`), baseballRef=db.ref('gameState');
- let sport='baseball', ss={}, bs={}; const clamp=(n,a=0,b=999)=>Math.max(a,Math.min(b,Number(n)||0));
- const names={baseball:'BÉISBOL',soccer:'FÚTBOL',basketball:'BÁSQUET',volleyball:'VOLEIBOL',football:'F. AMERICANO'};
- const render=()=>{
-   $('mdcSport').textContent=names[sport]||sport.toUpperCase(); $('mdcBaseball').hidden=sport!=='baseball';
-   if(sport==='baseball'){const a=bs.away||{},h=bs.home||{};$('mdcAwayName').textContent=a.name||'VISITANTE';$('mdcHomeName').textContent=h.name||'LOCAL';$('mdcAwayScore').textContent=a.score??0;$('mdcHomeScore').textContent=h.score??0;$('mdcPeriod').value=`${bs.inning||1} ${bs.inningSide||''}`.trim();$('mdcBalls').textContent=bs.balls||0;$('mdcStrikes').textContent=bs.strikes||0;$('mdcOuts').textContent=bs.outs||0;}
-   else {const c=ss.config||{},s=ss.score||{};$('mdcAwayName').textContent=c.awayName||'VISITANTE';$('mdcHomeName').textContent=c.homeName||'LOCAL';$('mdcAwayScore').textContent=s.awayScore??0;$('mdcHomeScore').textContent=s.homeScore??0;$('mdcPeriod').value=s.period??'1';$('mdcClock').textContent=s.clock||'00:00';}
- };
- sportRef.on('value',x=>{ss=x.val()||{};sport=ss.current||'baseball';render()}); baseballRef.on('value',x=>{bs=x.val()||{};render()});
- qa('[data-score]',root).forEach(b=>b.onclick=async()=>{const side=b.dataset.score,d=+b.dataset.delta;if(sport==='baseball'){const cur=clamp(bs?.[side]?.score);await baseballRef.child(`${side}/score`).set(clamp(cur+d));}else{const k=side==='home'?'homeScore':'awayScore';await sportRef.child(`score/${k}`).set(clamp((ss.score?.[k]||0)+d));}});
- qa('[data-count]',root).forEach(b=>b.onclick=()=>{const k=b.dataset.count,m=k==='balls'?3:2;baseballRef.child(k).set(clamp((bs[k]||0)+(+b.dataset.delta),0,m));});
- $('mdcPeriod').onchange=async()=>{const v=$('mdcPeriod').value.trim();if(sport==='baseball'){const m=v.match(/(\d+)\s*(.*)/);await baseballRef.update({inning:+(m?.[1]||1),inningSide:(m?.[2]||bs.inningSide||'ALTA').toUpperCase()});}else await sportRef.child('score/period').set(v||'1');};
- $('mdcClockStart').onclick=()=>$('sportClockStart')?.click(); $('mdcClockPause').onclick=()=>$('sportClockPause')?.click();
- setInterval(()=>{if(sport!=='baseball'&&$('sportClockLive'))$('mdcClock').textContent=$('sportClockLive').textContent||'00:00'},250);
-});
-})();
+ <section class="mbd-scoreboard-controls">
+  <article class="mbd-team away"><h3>VISITANTE</h3><div class="mbd-team-body"><img id="mbdAwayLogo" alt="Logo visitante"><div class="mbd-cards"><button data-card="awayYellowCards" data-delta="1"><em class="yellow"></em><span id="mbdAwayYellow">0</span></button><button data-card="awayRedCards" data-delta="1"><em class="red"></em><span id="mbdAwayRed">0</span></button></div><div class="mbd-score"><button data-score="away" data-delta="-1">−</button><strong id="mbdAwayScore">0</strong><button data-score="away" data-delta="1">+</button><small id="mbdAwayName">VISITANTE</small></div></div></article>
+  <article class="mbd-game-center"><h3>PERIODO / RELOJ</h3><div class="mbd-period"><button id="mbdPeriodMinus">−</button><strong id="mbdPeriod">1</strong><button id="mbdPeriodPlus">+</button><button id="mbdClockStart">▶</button><button id="mbdClockPause">Ⅱ</button><b id="mbdClock">00:00</b></div><div class="mbd-counts" id="mbdCounts"><label>BOLAS <button data-count="balls" data-delta="-1">−</button><strong id="mbdBalls">0</strong><button data-count="balls" data-delta="1">+</button></label><label>STRIKES <button data-count="strikes" data-delta="-1">−</button><strong id="mbdStrikes">0</strong><button data-count="strikes" data-delta="1">+</button></label><label>OUTS <button data-count="outs" data-delta="-1">−</button><strong id="mbdOuts">0</strong><button data-count="outs" data-delta="1">+</button></label></div></article>
+  <article class="mbd-team home"><h3>LOCAL</h3><div class="mbd-team-body"><div class="mbd-score"><button data-score="home" data-delta="-1">−</button><strong id="mbdHomeScore">0</strong><button data-score="home" data-delta="1">+</button><small id="mbdHomeName">LOCAL</small></div><img id="mbdHomeLogo" alt="Logo local"><div class="mbd-cards"><button data-card="homeYellowCards" data-delta="1"><em class="yellow"></em><span id="mbdHomeYellow">0</span></button><button data-card="homeRedCards" data-delta="1"><em class="red"></em><span id="mbdHomeRed">0</span></button></div></div><div class="mbd-bases" id="mbdBases"><button data-base="first">1B</button><button data-base="second">2B</button><button data-base="third">3B</button><button id="mbdClearBases">LIMPIAR</button></div></article>
+ </section>
+ <div class="mbd-actions"><button class="cut" data-action="cut">CUT</button><button class="auto" data-action="auto">AUTO</button><button class="fade" data-action="fade">FADE</button><button class="black" data-action="black">BLACK</button><button class="replay" id="mbdReplay">REPLAY</button><button class="full" id="mbdFullControl">CONTROL COMPLETO</button></div>
+ <nav class="mbd-nav"><button data-open-tab="production">PRODUCCIÓN</button><button data-open-tab="replay">REPLAY</button><button data-open-tab="graphics">GRÁFICOS</button><button data-open-tab="media">MEDIOS</button><button data-open-tab="system">SISTEMA</button></nav>
+ <button id="mbdBack" class="mbd-back">← VOLVER AL PANEL RÁPIDO</button>`;
+ document.body.appendChild(root);
+ const game=(window.Switcher&&Switcher.normalizeId(Switcher.qs("game",Switcher.app.defaultGame)))||"partido1"; $("mbdGame").textContent=game.toUpperCase();
+ const syncVideo=(dst,src)=>{if(dst&&src?.srcObject&&dst.srcObject!==src.srcObject){dst.srcObject=src.srcObject;dst.play().catch(()=>{})}};
+ const cardFor=id=>$("card-"+id)?.closest("article")||$("card-"+id);
+ function syncMonitors(){syncVideo($("mbdProgram"),$("programMonitor"));syncVideo($("mbdPreview"),$("previewMonitor"));$("mbdProgramName").textContent=$("programName")?.textContent||"—";$("mbdPreviewName").textContent=$("previewName")?.textContent||"—";qa(".mbd-source").forEach(el=>{const id=el.dataset.source,card=cardFor(id),video=card?.querySelector("video");syncVideo(el.querySelector("video"),video);el.querySelector("small").textContent=$("state-"+id)?.textContent||"OFFLINE";el.classList.toggle("on",$("state-"+id)?.textContent?.toLowerCase().includes("connect"));});const p=($("programName")?.textContent||"").toLowerCase();qa("[data-cam-select]").forEach(b=>b.classList.toggle("active",p.includes(b.dataset.camSelect)));$("mbdInfra").className=$("infra")?.classList.contains("bad")?"bad":$("infra")?.classList.contains("good")?"good":"warn";}
+ setInterval(syncMonitors,400); syncMonitors(); setInterval(()=>{$("mbdNow").textContent=new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})},1000);
+ const cameraPreview=id=>q(`[data-preview="${id}"]`)?.click(); qa("[data-cam-select]").forEach(b=>b.onclick=()=>cameraPreview(b.dataset.camSelect));qa(".mbd-source").forEach(b=>b.onclick=()=>cameraPreview(b.dataset.source));qa("[data-action]",root).forEach(b=>b.onclick=()=>$(b.dataset.action)?.click());
+ $("mbdTestStinger").onclick=()=>$("testReplayTransition")?.click();
+ qa("[data-speed]").forEach(b=>b.onclick=()=>{qa("[data-speed]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if($("replaySpeed"))$("replaySpeed").value=b.dataset.speed});
+ qa("[data-replay-sec]").forEach(b=>b.onclick=()=>{const sec=+b.dataset.replaySec,max=+($("replayBufferLength")?.textContent||30)||30,start=Math.max(0,max-sec);if($("replayStart"))$("replayStart").value=start;if($("replayEnd"))$("replayEnd").value=max;$("replayPreview")?.click()});
+ $("mbdReplay").onclick=()=>{$("replayPreview")?.click()||openFull("replay")};
+ function openFull(tab){document.body.classList.add("mobile-full-control");q(`[data-v15-tab="${tab}"]`)?.click();window.scrollTo(0,0)}
+ $("mbdFullControl").onclick=()=>openFull("production");qa("[data-open-tab]").forEach(b=>b.onclick=()=>openFull(b.dataset.openTab));$("mbdBack").onclick=()=>{document.body.classList.remove("mobile-full-control");window.scrollTo(0,0)};
+ if(!window.firebase||!window.Switcher)return;
+ const db=Switcher.initFirebase(),sportRef=db.ref(`switcher/${game}/sport`),baseballRef=db.ref("gameState");let sport="baseball",ss={},bs={},cards={},clock={running:false,mode:"countup",baseSeconds:0,startedAt:0};
+ const clamp=(n,a=0,b=999)=>Math.max(a,Math.min(b,Number(n)||0)),fmt=s=>{s=Math.max(0,Math.floor(s));return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`},clockSec=()=>{let s=+clock.baseSeconds||0;if(clock.running&&clock.startedAt){const e=Math.max(0,(Date.now()-clock.startedAt)/1000);s=clock.mode==="countdown"?s-e:s+e}return Math.max(0,s)};
+ const logo=(el,url)=>{if(!el)return;el.src=url||"";el.style.visibility=url?"visible":"hidden"};
+ function render(){const baseball=sport==="baseball",cfg=ss.config||{},sc=ss.score||{};$("mbdCounts").hidden=!baseball;$("mbdBases").hidden=!baseball;if(baseball){const a=bs.away||{},h=bs.home||{};$("mbdAwayName").textContent=a.name||"VISITANTE";$("mbdHomeName").textContent=h.name||"LOCAL";$("mbdAwayScore").textContent=a.score??0;$("mbdHomeScore").textContent=h.score??0;logo($("mbdAwayLogo"),a.logo||cfg.awayLogo);logo($("mbdHomeLogo"),h.logo||cfg.homeLogo);$("mbdPeriod").textContent=`${bs.inning||1} ${(bs.inningSide||"").replace("ALTA","▲").replace("BAJA","▼")}`;$("mbdBalls").textContent=bs.balls||0;$("mbdStrikes").textContent=bs.strikes||0;$("mbdOuts").textContent=bs.outs||0;const bases=bs.bases||{};qa("[data-base]").forEach(b=>b.classList.toggle("active",!!bases[b.dataset.base]));}else{$("mbdAwayName").textContent=cfg.awayName||"VISITANTE";$("mbdHomeName").textContent=cfg.homeName||"LOCAL";$("mbdAwayScore").textContent=sc.awayScore??0;$("mbdHomeScore").textContent=sc.homeScore??0;logo($("mbdAwayLogo"),cfg.awayLogo);logo($("mbdHomeLogo"),cfg.homeLogo);$("mbdPeriod").textContent=sc.period??1;}const map={awayYellowCards:"mbdAwayYellow",awayRedCards:"mbdAwayRed",homeYellowCards:"mbdHomeYellow",homeRedCards:"mbdHomeRed"};Object.entries(map).forEach(([k,id])=>$(id).textContent=cards[k]||0)}
+ sportRef.on("value",s=>{ss=s.val()||{};sport=ss.current||"baseball";render()});sportRef.child("cards").on("value",s=>{cards=s.val()||{};render()});sportRef.child("clockControl").on("value",s=>{clock={...clock,...(s.val()||{})}});baseballRef.on("value",s=>{bs=s.val()||{};render()});setInterval(()=>{$("mbdClock").textContent=fmt(clockSec())},250);
+ qa("[data-score]",root).forEach(b=>b.onclick=async()=>{const side=b.dataset.score,d=+b.dataset.delta;if(sport==="baseball")await baseballRef.child(`${side}/score`).set(clamp((bs?.[side]?.score||0)+d));else{const key=side==="home"?"homeScore":"awayScore";await sportRef.child(`score/${key}`).set(clamp((ss.score?.[key]||0)+d));}});
+ qa("[data-count]",root).forEach(b=>b.onclick=()=>{const k=b.dataset.count,m=k==="balls"?3:2;baseballRef.child(k).set(clamp((bs[k]||0)+(+b.dataset.delta),0,m))});
+ qa("[data-card]",root).forEach(b=>b.onclick=()=>sportRef.child(`cards/${b.dataset.card}`).set(clamp((cards[b.dataset.card]||0)+(+b.dataset.delta),0,9)));
+ qa("[data-base]",root).forEach(b=>b.onclick=()=>baseballRef.child(`bases/${b.dataset.base}`).set(!bs?.bases?.[b.dataset.base]));$("mbdClearBases").onclick=()=>baseballRef.child("bases").set({first:false,second:false,third:false});
+ const periodDelta=async d=>{if(sport==="baseball")await baseballRef.child("inning").set(clamp((+bs.inning||1)+d,1,99));else await sportRef.child("score/period").set(String(clamp((parseInt(ss.score?.period)||1)+d,1,99)))};$("mbdPeriodMinus").onclick=()=>periodDelta(-1);$("mbdPeriodPlus").onclick=()=>periodDelta(1);$("mbdClockStart").onclick=()=>$("sportClockStart")?.click();$("mbdClockPause").onclick=()=>$("sportClockPause")?.click();
+});})();

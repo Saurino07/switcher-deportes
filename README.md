@@ -1,10 +1,10 @@
-## V17.5 Sports Platform
+## V17.6 Sports Platform
 
-# Switcher Deportivo V17.5 Sports Platform
+# Switcher Deportivo V17.6 Sports Platform
 
 Plataforma multideporte basada en V16.2. Deportes incluidos: béisbol, fútbol, básquetbol, voleibol y fútbol americano. Conserva cámaras, Director, replay, escenas, medios, T-Bar, PWA, salida dual del marcador, Firebase y TURN.
 
-# Switcher Deportivo V17.5 — Motor gráfico con salida dual
+# Switcher Deportivo V17.6 — Motor gráfico con salida dual
 
 V16 conserva CAM1 Master, CAM2, CAM3, Director Broadcast UI, Replay, escenas, T-Bar, comerciales, entrevistas, Firebase y TURN.
 
@@ -19,11 +19,11 @@ El tamaño, posición y márgenes se aplican igual en las dos salidas. El valor 
 
 ## URLs
 
-- CAM1 Master: `/cam1-master/index.html?game=partido1&v=1750&code=TU_CODIGO`
-- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1750&code=TU_CODIGO`
-- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1750&code=TU_CODIGO`
-- Director: `/director/index.html?game=partido1&v=1750&code=TU_CODIGO`
-- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=1750&code=TU_CODIGO`
+- CAM1 Master: `/cam1-master/index.html?game=partido1&v=1760&code=TU_CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1760&code=TU_CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1760&code=TU_CODIGO`
+- Director: `/director/index.html?game=partido1&v=1760&code=TU_CODIGO`
+- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=1760&code=TU_CODIGO`
 
 ## Recomendación térmica
 
