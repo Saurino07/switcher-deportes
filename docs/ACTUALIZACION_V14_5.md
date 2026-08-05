@@ -1,4 +1,4 @@
-# V17.3
+# V17.4
 
 - Overlay integrado reducido al 28% del ancho, máximo 400 px.
 - Overlay directo para PRISM en `prism-overlay/`.
