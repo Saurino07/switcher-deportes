@@ -24,7 +24,7 @@
 }
 
 /* =========================================================
-   V17.4 MOBILE DIRECTOR CONSOLE
+   V17.5 MOBILE DIRECTOR CONSOLE
    Vista compacta operable en un solo lienzo horizontal.
 ========================================================= */
 .mobile-score-console{display:none}
@@ -72,3 +72,21 @@
 @media (max-width:900px) and (orientation:portrait){
  html.director-mobile-console body:before{content:'Gira el celular horizontalmente para usar el Director compacto';position:fixed;inset:0;z-index:999999;display:grid;place-items:center;padding:30px;text-align:center;background:#02060d;color:#fff;font-weight:900}
 }
+/* V17.5 — Director móvil real: cockpit compacto independiente */
+.mobile-director-cockpit{display:none}
+@media (max-width: 980px), (hover:none) and (pointer:coarse){
+ html.director-mobile-console,html.director-mobile-console body{min-width:0!important;width:100%!important;overflow-x:hidden!important}
+ body.director-mobile-console{padding:3px!important;background:#02060d!important}
+ body.director-mobile-console .shell{width:100%!important;max-width:none!important;margin:0!important;padding:0 0 42px!important}
+ body.director-mobile-console .v15-header{position:static!important;padding:4px 7px!important;margin:0 0 3px!important}.director-mobile-console .v15-header .brand{font-size:12px!important}.director-mobile-console .v15-header .subtitle{display:none}
+ .mobile-director-cockpit{display:block;position:relative;z-index:8500;background:#040b14;border:1px solid #24415f;border-radius:8px;padding:4px;margin:0 0 4px;color:#edf6ff}
+ .mdc-top{display:grid;grid-template-columns:1fr 1fr;gap:4px}.mdc-monitor{position:relative;background:#000;border-radius:6px;overflow:hidden;aspect-ratio:16/9;border:2px solid}.mdc-program{border-color:#ff405b}.mdc-preview{border-color:#22df91}.mdc-monitor video{width:100%;height:100%;object-fit:cover;display:block}.mdc-label{position:absolute;z-index:2;top:3px;left:3px;padding:2px 5px;border-radius:4px;background:rgba(0,0,0,.7);font-size:8px;font-weight:900}.mdc-monitor>span{position:absolute;z-index:2;bottom:2px;left:3px;right:3px;text-align:center;background:rgba(0,0,0,.65);font-size:7px;padding:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .mdc-cameras{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:4px}.mdc-cameras button{position:relative;padding:0!important;min-height:0!important;aspect-ratio:16/9;overflow:hidden;background:#000;border:1px solid #31506f;border-radius:5px}.mdc-cameras video{width:100%;height:100%;object-fit:cover}.mdc-cameras b{position:absolute;left:3px;bottom:2px;font-size:8px;background:rgba(0,0,0,.75);padding:1px 3px}.mdc-cameras small{position:absolute;right:3px;top:2px;font-size:6px;background:rgba(0,0,0,.75);padding:1px 3px}
+ .mdc-score{display:grid;grid-template-columns:1fr .8fr 1fr;gap:4px;margin-top:4px;align-items:stretch}.mdc-team,.mdc-middle{background:#09182a;border:1px solid #203d5a;border-radius:6px;padding:3px;text-align:center}.mdc-team small,.mdc-middle>span{display:block;font-size:7px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mdc-team>div{display:grid;grid-template-columns:28px 1fr 28px;gap:3px;align-items:center}.mdc-team button,.mdc-middle button{min-height:27px!important;padding:1px!important;font-size:14px!important}.mdc-team strong{font-size:20px}.mdc-middle input{width:100%;height:24px!important;padding:1px!important;text-align:center;font-size:9px!important;margin:2px 0}.mdc-middle>div{display:grid;grid-template-columns:26px 26px 1fr;gap:2px;align-items:center}.mdc-middle b{font-size:10px}
+ .mdc-baseball{display:grid;grid-template-columns:repeat(9,1fr);gap:2px;margin-top:4px}.mdc-baseball button,.mdc-baseball b{min-height:25px!important;padding:2px!important;font-size:8px!important;display:grid;place-items:center;background:#0a1828;border:1px solid #24415f;border-radius:4px}.mdc-switch{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:4px}.mdc-switch button{min-height:29px!important;padding:2px!important;font-size:8px!important;font-weight:900}.mdc-switch button[data-action=cut]{background:#b91f38}.mdc-switch button[data-action=auto]{background:#147b52}.mdc-switch button[data-action=fade]{background:#245f9f}.mdc-switch button[data-action=black]{background:#111827}
+ body.director-mobile-console>.phone-view-note{display:none!important}
+ body.director-mobile-console .broadcast-layout,body.director-mobile-console #cameraGrid,body.director-mobile-console .v15-section-title,body.director-mobile-console .v15-quickbar{display:none!important}
+ body.director-mobile-console .v15-workspace{display:block!important}.director-mobile-console .v15-nav{position:sticky!important;top:0!important;z-index:8000!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:2px!important;padding:3px!important;margin:0 0 4px!important}.director-mobile-console .v15-nav .nav-small{display:none!important}.director-mobile-console .v15-nav button{min-height:27px!important;padding:2px!important;font-size:7px!important;justify-content:center!important}
+ body.director-mobile-console .v15-tab>.panel,body.director-mobile-console .v15-tab>.subpanel{padding:6px!important}.director-mobile-console .controls{gap:4px!important}.director-mobile-console input,.director-mobile-console select,.director-mobile-console button{font-size:9px!important}.director-mobile-console .v15-status-dock{height:26px!important}
+}
+@media (orientation:portrait) and (max-width:980px){html.director-mobile-console body:before{content:'Gira el celular horizontalmente';position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#02060d;color:white;font-weight:900}}
