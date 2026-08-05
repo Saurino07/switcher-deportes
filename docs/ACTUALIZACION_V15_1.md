@@ -1,4 +1,4 @@
-# V17.1 — Fullscreen, audio y optimización térmica
+# V17.2 — Fullscreen, audio y optimización térmica
 
 ## Correcciones
 1. PWA fullscreen y control flotante auto-ocultable.

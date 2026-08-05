@@ -1,0 +1,23 @@
+(()=>{"use strict";
+const $=id=>document.getElementById(id); if(!window.firebase||!window.Switcher||!$("v172SportsTools"))return;
+const game=Switcher.normalizeId(Switcher.qs("game",Switcher.app.defaultGame)),db=Switcher.initFirebase(),sportRef=db.ref(`switcher/${game}/sport`),clockRef=sportRef.child("clockControl");
+let homeData="",awayData="",clockState={running:false,mode:"countup",baseSeconds:0,initialSeconds:0,startedAt:0};
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const fmt=s=>{s=Math.max(0,Math.floor(s));return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`};
+const currentSeconds=()=>{let s=+clockState.baseSeconds||0;if(clockState.running&&clockState.startedAt){const elapsed=Math.max(0,(Date.now()-clockState.startedAt)/1000);s=clockState.mode==="countdown"?s-elapsed:s+elapsed}return Math.max(0,s)};
+setInterval(()=>{$("sportClockLive").textContent=fmt(currentSeconds())},250);
+async function imageData(file){if(!file)return "";if(file.size>8*1024*1024)throw new Error("La imagen supera 8 MB");const img=await new Promise((ok,no)=>{const i=new Image;i.onload=()=>ok(i);i.onerror=no;i.src=URL.createObjectURL(file)});const max=512,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));c.getContext("2d").drawImage(img,0,0,c.width,c.height);return c.toDataURL("image/webp",.82)}
+$("sportHomeLogoFile").onchange=async e=>{try{homeData=await imageData(e.target.files?.[0]);$("v172SyncStatus").textContent="LOGO LOCAL LISTO"}catch(x){alert(x.message)}};
+$("sportAwayLogoFile").onchange=async e=>{try{awayData=await imageData(e.target.files?.[0]);$("v172SyncStatus").textContent="LOGO VISITANTE LISTO"}catch(x){alert(x.message)}};
+$("savePhoneLogos").onclick=async()=>{const updates={};if(homeData)updates.homeLogo=homeData;if(awayData)updates.awayLogo=awayData;if(!Object.keys(updates).length)return alert("Selecciona al menos una imagen");await sportRef.child("config").update(updates);const h=$("sportHomeLogo"),a=$("sportAwayLogo");if(h&&homeData)h.value=homeData;if(a&&awayData)a.value=awayData;$("v172SyncStatus").textContent="LOGOS GUARDADOS"};
+$("clearPhoneLogos").onclick=async()=>{homeData=awayData="";await sportRef.child("config").update({homeLogo:"",awayLogo:""});$("sportHomeLogoFile").value=$("sportAwayLogoFile").value=""};
+clockRef.on("value",s=>{clockState={...clockState,...(s.val()||{})};$("sportClockMode").value=clockState.mode||"countup";$("sportClockInitialMinutes").value=Math.round((clockState.initialSeconds||0)/60)});
+$("sportClockStart").onclick=async()=>{const mode=$("sportClockMode").value,initial=clamp(+$('sportClockInitialMinutes').value||0,0,180)*60;let base=currentSeconds();if(!clockState.startedAt&&base===0&&mode==="countdown")base=initial;await clockRef.set({running:true,mode,baseSeconds:base,initialSeconds:initial,startedAt:firebase.database.ServerValue.TIMESTAMP,updatedAt:firebase.database.ServerValue.TIMESTAMP})};
+$("sportClockPause").onclick=async()=>{await clockRef.update({running:false,baseSeconds:currentSeconds(),startedAt:0,updatedAt:firebase.database.ServerValue.TIMESTAMP})};
+$("sportClockStop").onclick=async()=>{await clockRef.update({running:false,baseSeconds:0,startedAt:0,updatedAt:firebase.database.ServerValue.TIMESTAMP})};
+$("sportClockReset").onclick=async()=>{const mode=$("sportClockMode").value,initial=clamp(+$('sportClockInitialMinutes').value||0,0,180)*60;await clockRef.set({running:false,mode,baseSeconds:mode==="countdown"?initial:0,initialSeconds:initial,startedAt:0,updatedAt:firebase.database.ServerValue.TIMESTAMP})};
+const cardIds=["homeYellowCards","homeRedCards","awayYellowCards","awayRedCards"];
+sportRef.child("cards").on("value",s=>{const v=s.val()||{};cardIds.forEach(id=>$(id).value=clamp(+v[id]||0,0,9))});
+$("saveCards").onclick=()=>sportRef.child("cards").set(Object.fromEntries(cardIds.map(id=>[id,clamp(+$(id).value||0,0,9)])));
+$("resetCards").onclick=()=>sportRef.child("cards").set({homeYellowCards:0,homeRedCards:0,awayYellowCards:0,awayRedCards:0});
+})();
