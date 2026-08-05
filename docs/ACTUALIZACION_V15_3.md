@@ -1,4 +1,4 @@
-# V17.0 — Cámara corregida y selector frontal/trasero
+# V17.1 — Cámara corregida y selector frontal/trasero
 
 - Inicio de cámara desacoplado de Firebase/TURN.
 - Selector explícito Cámara trasera / Cámara frontal.
@@ -6,4 +6,4 @@
 - Reintento automático con restricciones básicas si el perfil avanzado falla.
 - Botón CAMBIAR CÁMARA.
 - Mensajes claros para permisos, cámara ocupada y navegador no compatible.
-- Caché PWA renovada a switcher-v1700.
+- Caché PWA renovada a switcher-v1710.
