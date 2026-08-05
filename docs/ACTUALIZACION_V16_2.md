@@ -1,3 +1,3 @@
-# V17.2
+# V17.3
 
 Corrige la composición del overlay: el lienzo permanece a pantalla completa y solo el marcador principal se escala.
