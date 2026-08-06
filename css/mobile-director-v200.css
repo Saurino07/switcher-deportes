@@ -1,0 +1,16 @@
+/* V20 — solo controla el host Shadow DOM y la navegación al control completo. */
+@media screen and (max-width:1100px) and (orientation:landscape){
+ html.director-mobile-console,html.director-mobile-console body{width:100%;height:100%;min-width:0;margin:0;padding:0;overflow:hidden;background:#02060d;overscroll-behavior:none}
+ body.director-mobile-console>.phone-view-note,body.director-mobile-console>main.shell{display:none!important}
+ body.director-mobile-console.mobile-full-control{overflow:auto!important;background:#030812!important}
+ body.director-mobile-console.mobile-full-control #mobileBroadcastDirector{display:none!important}
+ body.director-mobile-console.mobile-full-control>main.shell{display:block!important;width:100%!important;min-width:0!important;max-width:none!important;margin:0!important;padding:54px 8px 16px!important;overflow-x:hidden!important}
+ body.director-mobile-console.mobile-full-control .v15-workspace{display:block!important}
+ body.director-mobile-console.mobile-full-control .v15-nav{position:static!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;margin-bottom:10px!important}
+ body.director-mobile-console.mobile-full-control .v15-content,body.director-mobile-console.mobile-full-control .v15-tab{width:100%!important}
+ body.director-mobile-console.mobile-full-control .v15-header{display:block!important}
+ body.director-mobile-console.mobile-full-control .broadcast-layout,body.director-mobile-console.mobile-full-control #cameraGrid,body.director-mobile-console.mobile-full-control .v15-section-title,body.director-mobile-console.mobile-full-control .v15-quickbar,body.director-mobile-console.mobile-full-control .v15-status-dock{display:none!important}
+ .mbd-back{display:none}
+ body.director-mobile-console.mobile-full-control .mbd-back{all:unset!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;position:fixed!important;left:max(8px,env(safe-area-inset-left))!important;top:max(8px,env(safe-area-inset-top))!important;width:auto!important;height:38px!important;padding:0 14px!important;z-index:2147483647!important;border:1px solid #2bd9e8!important;border-radius:7px!important;background:#087783!important;color:#fff!important;font:900 12px/1 Arial,Helvetica,sans-serif!important;white-space:nowrap!important;box-shadow:0 4px 12px rgba(0,0,0,.4)!important;cursor:pointer!important}
+}
+@media screen and (max-width:1100px) and (orientation:portrait){html.director-mobile-console body:before{content:'Gira el celular horizontalmente para usar el Director Broadcast';position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:30px;text-align:center;background:#02060d;color:#fff;font-weight:900}#mobileBroadcastDirector{display:none!important}}

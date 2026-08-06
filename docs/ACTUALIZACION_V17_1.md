@@ -1,4 +1,4 @@
-# V19.0 — Corrección del compositor multideporte
+# V20.0 — Corrección del compositor multideporte
 
 ## Causa del defecto
 V17 cargaba el marcador de béisbol dentro de un iframe anidado (`CAM1 Master → sports-overlay → overlay`). El CSS de tamaño y posición se aplicaba al contenedor exterior, pero no alcanzaba el marcador interno. El resultado era un marcador de tamaño original, recortado y desbordado.
