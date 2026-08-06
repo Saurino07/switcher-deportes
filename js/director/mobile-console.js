@@ -37,7 +37,7 @@ ready(()=>{
  <nav class="mbd-nav"><button data-open-tab="production">PRODUCCIÓN</button><button data-open-tab="replay">REPLAY</button><button data-open-tab="graphics">GRÁFICOS</button><button data-open-tab="media">MEDIOS</button><button data-open-tab="system">SISTEMA</button></nav>
  <button id="mbdBack" class="mbd-back">← VOLVER AL PANEL RÁPIDO</button>`;
 
- // V17.7: lienzo fijo 1600x900 escalado proporcionalmente al viewport.
+ // V17.8: lienzo fijo 1600x900 escalado proporcionalmente al viewport.
  // Evita que el navegador comprima filas, recorte controles o altere la distribución.
  const stage=document.createElement("div");
  stage.className="mbd-stage";
@@ -45,11 +45,19 @@ ready(()=>{
  root.appendChild(stage);
  document.body.appendChild(root);
  const fitStage=()=>{
-   const vw=Math.max(1,window.visualViewport?.width||window.innerWidth||screen.width||1600);
-   const vh=Math.max(1,window.visualViewport?.height||window.innerHeight||screen.height||900);
+   const vv=window.visualViewport;
+   const vw=Math.max(1,vv?.width||window.innerWidth||document.documentElement.clientWidth||1600);
+   const vh=Math.max(1,vv?.height||window.innerHeight||document.documentElement.clientHeight||900);
    const scale=Math.min(vw/1600,vh/900);
+   const renderedW=1600*scale, renderedH=900*scale;
+   const left=Math.max(0,(vw-renderedW)/2)+(vv?.offsetLeft||0);
+   const top=Math.max(0,(vh-renderedH)/2)+(vv?.offsetTop||0);
    stage.style.setProperty("--mbd-scale",String(scale));
+   stage.style.left=`${left}px`;
+   stage.style.top=`${top}px`;
    stage.style.transform=`scale(${scale})`;
+   root.style.width=`${vw}px`;
+   root.style.height=`${vh}px`;
  };
  fitStage();
  window.addEventListener("resize",fitStage,{passive:true});

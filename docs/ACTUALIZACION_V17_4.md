@@ -1,4 +1,4 @@
-# V17.7 Director móvil compacto
+# V17.8 Director móvil compacto
 
 - PROGRAM y PREVIEW en dos monitores compactos.
 - CAM1, CAM2 y CAM3 en una fila.
