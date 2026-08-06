@@ -1,4 +1,4 @@
-# V17.9 — Director móvil 16:9 escalado
+# V18.0 — Director móvil 16:9 escalado
 
 Esta versión sustituye la adaptación fluida del panel móvil por un lienzo fijo de 1600 × 900 que se escala proporcionalmente al área visible del teléfono.
 
@@ -11,4 +11,4 @@ Esta versión sustituye la adaptación fluida del panel móvil por un lienzo fij
 - Se adapta automáticamente al espacio disponible aunque Chrome muestre su barra de direcciones.
 - La vista de escritorio no cambia.
 
-Use el Director en posición horizontal con `v=1790`.
+Use el Director en posición horizontal con `v=1800`.

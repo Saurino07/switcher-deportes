@@ -1,4 +1,4 @@
-# V17.9 — Corrección de arranque PWA
+# V18.0 — Corrección de arranque PWA
 
 - Conserva código y partido al instalar la app.
 - Elimina cachés obsoletas.

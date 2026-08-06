@@ -37,27 +37,27 @@ ready(()=>{
  <nav class="mbd-nav"><button data-open-tab="production">PRODUCCIÓN</button><button data-open-tab="replay">REPLAY</button><button data-open-tab="graphics">GRÁFICOS</button><button data-open-tab="media">MEDIOS</button><button data-open-tab="system">SISTEMA</button></nav>
  <button id="mbdBack" class="mbd-back">← VOLVER AL PANEL RÁPIDO</button>`;
 
- // V17.9: escenario broadcast fijo 1125x633, escalado desde el centro.
+ // V18.0: layout fluido. El escenario usa exactamente el viewport visible
+ // del navegador; no se escala como una imagen fija y no deja márgenes negros.
  const stage=document.createElement("div");
  stage.className="mbd-stage";
  while(root.firstChild) stage.appendChild(root.firstChild);
  root.appendChild(stage);
  document.body.appendChild(root);
- const DESIGN_W=1125, DESIGN_H=633;
- const fitStage=()=>{
+ const fitViewport=()=>{
    const vv=window.visualViewport;
-   const vw=Math.max(1,vv?.width||window.innerWidth||document.documentElement.clientWidth||DESIGN_W);
-   const vh=Math.max(1,vv?.height||window.innerHeight||document.documentElement.clientHeight||DESIGN_H);
-   const scale=Math.min(vw/DESIGN_W,vh/DESIGN_H);
-   stage.style.width=DESIGN_W+"px";
-   stage.style.height=DESIGN_H+"px";
-   stage.style.transform=`scale(${scale})`;
-   root.style.setProperty("--mbd-scale",String(scale));
+   const vw=Math.max(1,Math.round(vv?.width||window.innerWidth||document.documentElement.clientWidth||1));
+   const vh=Math.max(1,Math.round(vv?.height||window.innerHeight||document.documentElement.clientHeight||1));
+   root.style.setProperty("--mbd-vw",vw+"px");
+   root.style.setProperty("--mbd-vh",vh+"px");
+   root.style.width=vw+"px";
+   root.style.height=vh+"px";
  };
- fitStage();
- window.addEventListener("resize",fitStage,{passive:true});
- window.addEventListener("orientationchange",()=>setTimeout(fitStage,120),{passive:true});
- window.visualViewport?.addEventListener("resize",fitStage,{passive:true});
+ fitViewport();
+ window.addEventListener("resize",fitViewport,{passive:true});
+ window.addEventListener("orientationchange",()=>setTimeout(fitViewport,120),{passive:true});
+ window.visualViewport?.addEventListener("resize",fitViewport,{passive:true});
+ window.visualViewport?.addEventListener("scroll",fitViewport,{passive:true});
  const game=(window.Switcher&&Switcher.normalizeId(Switcher.qs("game",Switcher.app.defaultGame)))||"partido1"; $("mbdGame").textContent=game.toUpperCase();
  const syncVideo=(dst,src)=>{if(dst&&src?.srcObject&&dst.srcObject!==src.srcObject){dst.srcObject=src.srcObject;dst.play().catch(()=>{})}};
  const cardFor=id=>$("card-"+id)?.closest("article")||$("card-"+id);
