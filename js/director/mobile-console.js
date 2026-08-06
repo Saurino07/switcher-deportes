@@ -37,7 +37,7 @@ ready(()=>{
  <nav class="mbd-nav"><button data-open-tab="production">PRODUCCIÓN</button><button data-open-tab="replay">REPLAY</button><button data-open-tab="graphics">GRÁFICOS</button><button data-open-tab="media">MEDIOS</button><button data-open-tab="system">SISTEMA</button></nav>
 `;
 
- // V18.1: layout fluido. El escenario usa exactamente el viewport visible
+ // V18.2: layout fluido. El escenario usa exactamente el viewport visible
  // del navegador; no se escala como una imagen fija y no deja márgenes negros.
  const stage=document.createElement("div");
  stage.className="mbd-stage";

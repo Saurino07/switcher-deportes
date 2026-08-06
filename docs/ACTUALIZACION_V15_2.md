@@ -1,4 +1,4 @@
-# V18.1 — Corrección de arranque PWA
+# V18.2 — Corrección de arranque PWA
 
 - Conserva código y partido al instalar la app.
 - Elimina cachés obsoletas.

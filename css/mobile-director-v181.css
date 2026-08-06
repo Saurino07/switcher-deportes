@@ -1,4 +1,4 @@
-/* V18.1 — Director móvil fluido: ocupa el viewport visible sin lienzos fijos ni letterboxing. */
+/* V18.2 — Director móvil fluido: ocupa el viewport visible sin lienzos fijos ni letterboxing. */
 @media screen and (max-width:1100px) and (orientation:landscape){
   html.director-mobile-console,
   html.director-mobile-console body{
@@ -107,7 +107,7 @@
 }
 
 /* =========================================================
-   V18.1 — Director móvil operativo + tablero deportivo TV
+   V18.2 — Director móvil operativo + tablero deportivo TV
    Ajuste final basado en la referencia aprobada.
 ========================================================= */
 @media screen and (max-width:1100px) and (orientation:landscape){
@@ -187,4 +187,148 @@
 }
 @media screen and (max-width:1100px) and (orientation:landscape){
   .mbd-score{grid-template-columns:1fr!important}
+}
+
+/* =========================================================
+   V18.2 — Corrección final de tablero deportivo y regreso
+   - Tablero alineado como la referencia aprobada
+   - Botón volver compacto, profesional y no obstructivo
+========================================================= */
+@media screen and (max-width:1100px) and (orientation:landscape){
+  /* El tablero deportivo conserva tres zonas claras. */
+  .mbd-scoreboard-controls{
+    display:grid!important;
+    grid-template-columns:minmax(0,36%) minmax(0,28%) minmax(0,36%)!important;
+    gap:0!important;
+    padding:clamp(5px,.7vh,9px) clamp(8px,.75vw,13px)!important;
+    background:linear-gradient(180deg,#fff 0%,#f1f2f4 100%)!important;
+    border:1px solid #cfd4da!important;
+    border-radius:clamp(6px,.65vw,10px)!important;
+    color:#080b0f!important;
+    overflow:hidden!important;
+  }
+  .mbd-scoreboard-controls>article{
+    position:relative!important;
+    min-width:0!important;
+    min-height:0!important;
+    border-right:1px solid #d6dade!important;
+    padding:0 clamp(5px,.55vw,9px)!important;
+  }
+  .mbd-scoreboard-controls>article:last-child{border-right:0!important}
+  .mbd-scoreboard-controls h3{
+    height:clamp(17px,2.7vh,26px)!important;
+    line-height:clamp(17px,2.7vh,26px)!important;
+    margin:0!important;
+    font-size:clamp(10px,1.55vh,18px)!important;
+    font-weight:950!important;
+    text-align:center!important;
+  }
+
+  /* VISITANTE: logo | tarjetas | marcador. */
+  .mbd-team{display:grid!important;grid-template-rows:auto minmax(0,1fr)!important;overflow:visible!important}
+  .mbd-team-body{
+    display:grid!important;
+    grid-template-columns:minmax(48px,22%) minmax(36px,13%) minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:clamp(4px,.55vw,9px)!important;
+    height:100%!important;
+  }
+  .mbd-team.home .mbd-team-body{
+    grid-template-columns:minmax(0,1fr) minmax(48px,22%) minmax(36px,13%)!important;
+  }
+  .mbd-team img{
+    width:min(10.5vh,8.2vw)!important;
+    height:min(10.5vh,8.2vw)!important;
+    min-width:38px!important;min-height:38px!important;
+    object-fit:contain!important;
+    justify-self:center!important;
+  }
+  .mbd-cards{display:grid!important;gap:clamp(3px,.45vh,6px)!important;align-content:center!important}
+  .mbd-cards button{
+    display:grid!important;grid-template-columns:auto 1fr!important;align-items:center!important;
+    gap:clamp(2px,.35vw,5px)!important;padding:0!important;background:transparent!important;border:0!important;color:#111!important;
+    font-size:clamp(8px,1.15vh,13px)!important;
+  }
+  .mbd-cards em{width:clamp(14px,2.1vh,23px)!important;height:clamp(20px,3.1vh,34px)!important;border:1px solid #333!important;border-radius:3px!important}
+  .mbd-score{
+    display:grid!important;
+    grid-template-columns:minmax(26px,22%) minmax(38px,35%) minmax(26px,22%)!important;
+    grid-template-rows:auto auto!important;
+    place-content:center!important;align-items:center!important;
+    gap:clamp(3px,.45vw,7px)!important;
+  }
+  .mbd-score strong{font-size:clamp(24px,5.2vh,48px)!important;line-height:1!important;text-align:center!important}
+  .mbd-score button{height:clamp(27px,5vh,45px)!important;min-height:0!important;padding:0!important;font-size:clamp(15px,2.8vh,25px)!important;background:#e8e8e8!important;border:1px solid #999!important;color:#111!important}
+  .mbd-score small{grid-column:1/4!important;font-size:clamp(6px,.95vh,11px)!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .mbd-quick-score{
+    position:absolute!important;
+    left:50%!important;bottom:clamp(2px,.35vh,5px)!important;
+    transform:translateX(-50%)!important;
+    width:auto!important;max-width:88%!important;height:clamp(20px,3.6vh,34px)!important;
+    padding:0 clamp(8px,.8vw,14px)!important;
+    border:1px solid #999!important;border-radius:4px!important;background:#eee!important;color:#111!important;
+    font-size:clamp(7px,1.05vh,12px)!important;font-weight:900!important;white-space:nowrap!important;
+  }
+  .mbd-team{padding-bottom:clamp(22px,3.8vh,36px)!important}
+
+  /* Centro: periodo/reloj arriba; B/S/O abajo. */
+  .mbd-game-center{
+    display:grid!important;
+    grid-template-rows:auto minmax(32px,42%) minmax(0,1fr)!important;
+    padding:0 clamp(6px,.7vw,11px)!important;
+  }
+  .mbd-period{
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    gap:clamp(4px,.5vw,8px)!important;min-height:0!important;
+  }
+  .mbd-period button{width:clamp(27px,3.2vw,45px)!important;height:clamp(27px,5vh,45px)!important;min-width:0!important;min-height:0!important;padding:0!important;font-size:clamp(13px,2.3vh,22px)!important}
+  .mbd-period strong{min-width:clamp(34px,4vw,58px)!important;font-size:clamp(18px,3.5vh,32px)!important;text-align:center!important}
+  .mbd-period b{font-size:clamp(15px,2.8vh,27px)!important;padding:clamp(4px,.65vh,8px) clamp(8px,.8vw,13px)!important;border-radius:5px!important;background:#070707!important;color:#fff!important;font-variant-numeric:tabular-nums!important}
+  .mbd-counts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:end!important;gap:clamp(5px,.65vw,10px)!important;padding-top:2px!important}
+  .mbd-counts label{
+    display:grid!important;
+    grid-template-columns:minmax(22px,28%) minmax(28px,36%) minmax(22px,28%)!important;
+    grid-template-rows:auto 1fr!important;
+    align-items:center!important;justify-content:center!important;text-align:center!important;
+    gap:2px!important;font-size:clamp(7px,1vh,12px)!important;font-weight:900!important;
+  }
+  .mbd-counts label::before{grid-column:1/4!important}
+  .mbd-counts button{height:clamp(23px,4.1vh,37px)!important;min-height:0!important;padding:0!important;font-size:clamp(12px,2.1vh,19px)!important}
+  .mbd-counts strong{font-size:clamp(14px,2.5vh,23px)!important;line-height:1!important}
+
+  /* Bases alineadas al extremo inferior derecho del equipo local. */
+  .mbd-team.home{padding-bottom:clamp(25px,4.3vh,40px)!important}
+  .mbd-bases{
+    position:absolute!important;right:clamp(6px,.65vw,11px)!important;bottom:clamp(2px,.35vh,5px)!important;
+    display:flex!important;align-items:center!important;justify-content:flex-end!important;
+    gap:clamp(2px,.3vw,5px)!important;white-space:nowrap!important;
+  }
+  .mbd-bases:before{content:'◆ BASES';font-size:clamp(6px,.9vh,10px)!important;font-weight:950!important;color:#111!important;margin-right:2px!important}
+  .mbd-bases button{height:clamp(20px,3.5vh,32px)!important;padding:0 clamp(5px,.55vw,9px)!important;font-size:clamp(8px,1.15vh,13px)!important;background:#252a31!important;color:#fff!important;border:1px solid #111!important}
+  #mbdClearBases{background:#078c43!important}
+
+  /* Regreso al panel rápido: compacto y no obstructivo. */
+  body.director-mobile-console.mobile-full-control .mbd-back{
+    all:unset!important;
+    box-sizing:border-box!important;
+    display:inline-flex!important;align-items:center!important;justify-content:center!important;
+    position:fixed!important;
+    left:max(8px,env(safe-area-inset-left))!important;
+    top:max(8px,env(safe-area-inset-top))!important;
+    width:auto!important;max-width:220px!important;height:38px!important;
+    padding:0 14px!important;
+    z-index:2147483647!important;
+    border:1px solid #2bd9e8!important;border-radius:7px!important;
+    background:#087783!important;color:#fff!important;
+    font:900 12px/1 Arial,Helvetica,sans-serif!important;
+    letter-spacing:.1px!important;white-space:nowrap!important;
+    box-shadow:0 4px 12px rgba(0,0,0,.4)!important;
+    cursor:pointer!important;touch-action:manipulation!important;
+  }
+  body.director-mobile-console.mobile-full-control .mbd-back:active{transform:scale(.97)!important}
+  body.director-mobile-console:not(.mobile-full-control) .mbd-back{display:none!important}
+  body.director-mobile-console.mobile-full-control>main.shell{
+    display:block!important;width:100%!important;min-width:1120px!important;max-width:none!important;
+    margin:0!important;padding:52px 8px 12px!important;
+  }
 }
