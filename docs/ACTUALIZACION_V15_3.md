@@ -1,4 +1,4 @@
-# V21.0 — Cámara corregida y selector frontal/trasero
+# V22.0 — Cámara corregida y selector frontal/trasero
 
 - Inicio de cámara desacoplado de Firebase/TURN.
 - Selector explícito Cámara trasera / Cámara frontal.

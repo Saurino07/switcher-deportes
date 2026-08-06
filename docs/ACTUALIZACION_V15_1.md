@@ -1,4 +1,4 @@
-# V21.0 — Fullscreen, audio y optimización térmica
+# V22.0 — Fullscreen, audio y optimización térmica
 
 ## Correcciones
 1. PWA fullscreen y control flotante auto-ocultable.

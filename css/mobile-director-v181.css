@@ -1,4 +1,4 @@
-/* V21.0 — Director móvil fluido: ocupa el viewport visible sin lienzos fijos ni letterboxing. */
+/* V22.0 — Director móvil fluido: ocupa el viewport visible sin lienzos fijos ni letterboxing. */
 @media screen and (max-width:1100px) and (orientation:landscape){
   html.director-mobile-console,
   html.director-mobile-console body{
@@ -107,7 +107,7 @@
 }
 
 /* =========================================================
-   V21.0 — Director móvil operativo + tablero deportivo TV
+   V22.0 — Director móvil operativo + tablero deportivo TV
    Ajuste final basado en la referencia aprobada.
 ========================================================= */
 @media screen and (max-width:1100px) and (orientation:landscape){
@@ -190,7 +190,7 @@
 }
 
 /* =========================================================
-   V21.0 — Corrección final de tablero deportivo y regreso
+   V22.0 — Corrección final de tablero deportivo y regreso
    - Tablero alineado como la referencia aprobada
    - Botón volver compacto, profesional y no obstructivo
 ========================================================= */
