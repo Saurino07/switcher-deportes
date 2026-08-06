@@ -1,4 +1,4 @@
-# V18.0
+# V18.1
 
 - Selección de logos desde el teléfono con compresión y sincronización por Firebase.
 - Reloj ascendente/descendente con iniciar, pausar, detener y reiniciar.

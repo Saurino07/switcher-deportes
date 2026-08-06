@@ -1,4 +1,4 @@
-# V18.0 Director móvil adaptativo
+# V18.1 Director móvil adaptativo
 
 Esta versión elimina el lienzo fijo escalado de las versiones V17.7–V17.9. El panel rápido ocupa directamente el viewport visible de Chrome o de la PWA y redistribuye sus filas y columnas de forma fluida.
 
@@ -11,4 +11,4 @@ Esta versión elimina el lienzo fijo escalado de las versiones V17.7–V17.9. El
 - Recalcula el viewport cuando Chrome muestra u oculta la barra de direcciones y al girar el teléfono.
 - Mantiene todas las funciones existentes.
 
-Usar `v=1800`.
+Usar `v=1810`.

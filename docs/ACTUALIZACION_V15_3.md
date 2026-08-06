@@ -1,4 +1,4 @@
-# V18.0 — Cámara corregida y selector frontal/trasero
+# V18.1 — Cámara corregida y selector frontal/trasero
 
 - Inicio de cámara desacoplado de Firebase/TURN.
 - Selector explícito Cámara trasera / Cámara frontal.
