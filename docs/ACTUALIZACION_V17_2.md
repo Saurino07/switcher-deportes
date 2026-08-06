@@ -1,4 +1,4 @@
-# V20.0
+# V21.0
 
 - Selección de logos desde el teléfono con compresión y sincronización por Firebase.
 - Reloj ascendente/descendente con iniciar, pausar, detener y reiniciar.

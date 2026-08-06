@@ -1,16 +1,20 @@
-# Switcher Deportivo V20.0
+## V21.0 Director móvil validado
+
+Esta entrega reemplaza el panel móvil V20 y corrige transiciones, bases, conteos, tarjetas y controles numéricos.
+
+# Switcher Deportivo V21.0
 
 Director móvil corregido, tablero deportivo organizado, regreso al panel rápido e instalación PWA del Director.
 
 Consulta `docs/ACTUALIZACION_V18_1.md`.
 
-## V20.0 Sports Platform
+## V21.0 Sports Platform
 
-# Switcher Deportivo V20.0 Sports Platform
+# Switcher Deportivo V21.0 Sports Platform
 
 Plataforma multideporte basada en V16.2. Deportes incluidos: béisbol, fútbol, básquetbol, voleibol y fútbol americano. Conserva cámaras, Director, replay, escenas, medios, T-Bar, PWA, salida dual del marcador, Firebase y TURN.
 
-# Switcher Deportivo V20.0 — Motor gráfico con salida dual
+# Switcher Deportivo V21.0 — Motor gráfico con salida dual
 
 V16 conserva CAM1 Master, CAM2, CAM3, Director Broadcast UI, Replay, escenas, T-Bar, comerciales, entrevistas, Firebase y TURN.
 
@@ -25,11 +29,11 @@ El tamaño, posición y márgenes se aplican igual en las dos salidas. El valor 
 
 ## URLs
 
-- CAM1 Master: `/cam1-master/index.html?game=partido1&v=2000&code=TU_CODIGO`
-- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=2000&code=TU_CODIGO`
-- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=2000&code=TU_CODIGO`
-- Director: `/director/index.html?game=partido1&v=2000&code=TU_CODIGO`
-- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=2000&code=TU_CODIGO`
+- CAM1 Master: `/cam1-master/index.html?game=partido1&v=2100&code=TU_CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=2100&code=TU_CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=2100&code=TU_CODIGO`
+- Director: `/director/index.html?game=partido1&v=2100&code=TU_CODIGO`
+- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=2100&code=TU_CODIGO`
 
 ## Recomendación térmica
 

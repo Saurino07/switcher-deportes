@@ -18,6 +18,6 @@ $("sportClockStop").onclick=async()=>{await clockRef.update({running:false,baseS
 $("sportClockReset").onclick=async()=>{const mode=$("sportClockMode").value,initial=clamp(+$('sportClockInitialMinutes').value||0,0,180)*60;await clockRef.set({running:false,mode,baseSeconds:mode==="countdown"?initial:0,initialSeconds:initial,startedAt:0,updatedAt:firebase.database.ServerValue.TIMESTAMP})};
 const cardIds=["homeYellowCards","homeRedCards","awayYellowCards","awayRedCards"];
 sportRef.child("cards").on("value",s=>{const v=s.val()||{};cardIds.forEach(id=>$(id).value=clamp(+v[id]||0,0,9))});
-$("saveCards").onclick=()=>sportRef.child("cards").set(Object.fromEntries(cardIds.map(id=>[id,clamp(+$(id).value||0,0,9)])));
-$("resetCards").onclick=()=>sportRef.child("cards").set({homeYellowCards:0,homeRedCards:0,awayYellowCards:0,awayRedCards:0});
+$("saveCards").onclick=async()=>{const payload=Object.fromEntries(cardIds.map(id=>[id,clamp(+$(id).value||0,0,9)]));await sportRef.child("cards").set({...payload,updatedAt:firebase.database.ServerValue.TIMESTAMP});cardIds.forEach(id=>$(id).value=payload[id]);};
+$("resetCards").onclick=async()=>{const cleared={homeYellowCards:0,homeRedCards:0,awayYellowCards:0,awayRedCards:0,updatedAt:firebase.database.ServerValue.TIMESTAMP};cardIds.forEach(id=>$(id).value=0);await sportRef.child("cards").set(cleared);};
 })();

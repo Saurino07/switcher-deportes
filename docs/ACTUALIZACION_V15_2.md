@@ -1,4 +1,4 @@
-# V20.0 — Corrección de arranque PWA
+# V21.0 — Corrección de arranque PWA
 
 - Conserva código y partido al instalar la app.
 - Elimina cachés obsoletas.
