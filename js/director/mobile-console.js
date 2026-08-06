@@ -37,8 +37,7 @@ ready(()=>{
  <nav class="mbd-nav"><button data-open-tab="production">PRODUCCIÓN</button><button data-open-tab="replay">REPLAY</button><button data-open-tab="graphics">GRÁFICOS</button><button data-open-tab="media">MEDIOS</button><button data-open-tab="system">SISTEMA</button></nav>
 `;
 
- // V18.2: layout fluido. El escenario usa exactamente el viewport visible
- // del navegador; no se escala como una imagen fija y no deja márgenes negros.
+ // V19.0: interfaz móvil reconstruida y adaptativa.
  const stage=document.createElement("div");
  stage.className="mbd-stage";
  while(root.firstChild) stage.appendChild(root.firstChild);
@@ -51,8 +50,7 @@ ready(()=>{
    const vh=Math.max(1,Math.round(vv?.height||window.innerHeight||document.documentElement.clientHeight||1));
    root.style.setProperty("--mbd-vw",vw+"px");
    root.style.setProperty("--mbd-vh",vh+"px");
-   root.style.width=vw+"px";
-   root.style.height=vh+"px";
+
  };
  fitViewport();
  window.addEventListener("resize",fitViewport,{passive:true});

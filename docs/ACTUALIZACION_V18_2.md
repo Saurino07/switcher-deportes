@@ -1,4 +1,4 @@
-# V18.2 — Tablero deportivo y navegación móvil corregidos
+# V19.0 — Tablero deportivo y navegación móvil corregidos
 
 - Reorganiza el tablero blanco según la referencia aprobada.
 - Mantiene logos, tarjetas, marcador, periodo/reloj, B/S/O y bases visibles y alineados.

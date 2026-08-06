@@ -1,4 +1,4 @@
-# V18.2 Director Broadcast móvil
+# V19.0 Director Broadcast móvil
 
 - Tablero deportivo reorganizado para coincidir con el diseño de referencia.
 - Logos, tarjetas, puntuación, reloj, conteos y bases visibles en una sola franja.

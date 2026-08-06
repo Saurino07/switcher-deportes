@@ -1,4 +1,4 @@
-# V18.2 Director móvil compacto
+# V19.0 Director móvil compacto
 
 - PROGRAM y PREVIEW en dos monitores compactos.
 - CAM1, CAM2 y CAM3 en una fila.

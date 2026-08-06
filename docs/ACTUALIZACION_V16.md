@@ -13,11 +13,11 @@ El tamaño, posición y márgenes se aplican igual en las dos salidas. El valor 
 
 ## URLs
 
-- CAM1 Master: `/cam1-master/index.html?game=partido1&v=1820&code=TU_CODIGO`
-- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1820&code=TU_CODIGO`
-- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1820&code=TU_CODIGO`
-- Director: `/director/index.html?game=partido1&v=1820&code=TU_CODIGO`
-- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=1820&code=TU_CODIGO`
+- CAM1 Master: `/cam1-master/index.html?game=partido1&v=1900&code=TU_CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=1900&code=TU_CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=1900&code=TU_CODIGO`
+- Director: `/director/index.html?game=partido1&v=1900&code=TU_CODIGO`
+- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=1900&code=TU_CODIGO`
 
 ## Recomendación térmica
 
