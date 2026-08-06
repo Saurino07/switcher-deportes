@@ -36,7 +36,25 @@ ready(()=>{
  <div class="mbd-actions"><button class="cut" data-action="cut">CUT</button><button class="auto" data-action="auto">AUTO</button><button class="fade" data-action="fade">FADE</button><button class="black" data-action="black">BLACK</button><button class="replay" id="mbdReplay">REPLAY</button><button class="full" id="mbdFullControl">CONTROL COMPLETO</button></div>
  <nav class="mbd-nav"><button data-open-tab="production">PRODUCCIÓN</button><button data-open-tab="replay">REPLAY</button><button data-open-tab="graphics">GRÁFICOS</button><button data-open-tab="media">MEDIOS</button><button data-open-tab="system">SISTEMA</button></nav>
  <button id="mbdBack" class="mbd-back">← VOLVER AL PANEL RÁPIDO</button>`;
+
+ // V17.7: lienzo fijo 1600x900 escalado proporcionalmente al viewport.
+ // Evita que el navegador comprima filas, recorte controles o altere la distribución.
+ const stage=document.createElement("div");
+ stage.className="mbd-stage";
+ while(root.firstChild) stage.appendChild(root.firstChild);
+ root.appendChild(stage);
  document.body.appendChild(root);
+ const fitStage=()=>{
+   const vw=Math.max(1,window.visualViewport?.width||window.innerWidth||screen.width||1600);
+   const vh=Math.max(1,window.visualViewport?.height||window.innerHeight||screen.height||900);
+   const scale=Math.min(vw/1600,vh/900);
+   stage.style.setProperty("--mbd-scale",String(scale));
+   stage.style.transform=`scale(${scale})`;
+ };
+ fitStage();
+ window.addEventListener("resize",fitStage,{passive:true});
+ window.visualViewport?.addEventListener("resize",fitStage,{passive:true});
+ window.visualViewport?.addEventListener("scroll",fitStage,{passive:true});
  const game=(window.Switcher&&Switcher.normalizeId(Switcher.qs("game",Switcher.app.defaultGame)))||"partido1"; $("mbdGame").textContent=game.toUpperCase();
  const syncVideo=(dst,src)=>{if(dst&&src?.srcObject&&dst.srcObject!==src.srcObject){dst.srcObject=src.srcObject;dst.play().catch(()=>{})}};
  const cardFor=id=>$("card-"+id)?.closest("article")||$("card-"+id);
