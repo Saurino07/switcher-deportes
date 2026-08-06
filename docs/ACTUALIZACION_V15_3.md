@@ -1,4 +1,4 @@
-# V17.8 — Cámara corregida y selector frontal/trasero
+# V17.9 — Cámara corregida y selector frontal/trasero
 
 - Inicio de cámara desacoplado de Firebase/TURN.
 - Selector explícito Cámara trasera / Cámara frontal.
