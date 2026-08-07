@@ -1,4 +1,4 @@
-# V23.0 Director móvil reconstruido
+# V24.0 Director móvil reconstruido
 
 Esta versión reemplaza por completo la página móvil del Director. No usa los estilos móviles acumulados de V17–V22.
 

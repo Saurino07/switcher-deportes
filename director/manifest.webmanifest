@@ -3,7 +3,7 @@
   "short_name": "Director PRO",
   "description": "Director móvil para producción deportiva multicámara.",
   "id": "./mobile.html",
-  "start_url": "./mobile.html?game=partido1&v=2300",
+  "start_url": "./mobile.html?game=partido1&v=2400",
   "scope": "./",
   "display": "standalone",
   "display_override": ["fullscreen", "standalone"],

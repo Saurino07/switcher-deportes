@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#02060d">
-<title>Director Móvil V23</title>
-<link rel="stylesheet" href="../css/director-mobile-v230.css?v=2300">
+<title>Director Móvil V24</title>
+<link rel="stylesheet" href="../css/director-mobile-v240.css?v=2400">
 </head>
 <body>
 <div id="rotateNotice">GIRA EL TELÉFONO A HORIZONTAL</div>
-<div id="app">
+<main id="app">
   <header class="statusbar">
     <span class="live">EN VIVO</span>
-    <span class="lat"><span class="wifi">◉</span> <span id="latency">— ms</span></span>
+    <span class="lat">● <span id="latency">— ms</span></span>
     <strong>DIRECTOR - <span id="gameTitle">PARTIDO1</span></strong>
     <span id="firebaseState">FIREBASE ●</span>
     <span id="clockNow"></span>
@@ -32,15 +32,10 @@
     <aside class="switch-side">
       <div class="side-block cameras-block">
         <h3>SELECCIÓN DE CÁMARA</h3>
-        <div class="cam-buttons">
-          <button data-cam="cam1">CAM1</button><button data-cam="cam2">CAM2</button><button data-cam="cam3">CAM3</button>
-        </div>
+        <div class="cam-buttons"><button data-cam="cam1">CAM1</button><button data-cam="cam2">CAM2</button><button data-cam="cam3">CAM3</button></div>
       </div>
       <div class="side-block transition-block"><small>TRANSICIÓN ACTUAL</small><strong id="transitionName">CORTE</strong></div>
-      <div class="side-block fade-block">
-        <small>DURACIÓN FADE</small>
-        <div><button id="fadeMinus">−</button><b id="fadeValue">1.0s</b><button id="fadePlus">+</button></div>
-      </div>
+      <div class="side-block fade-block"><small>DURACIÓN FADE</small><div><button id="fadeMinus">−</button><b id="fadeValue">1.0s</b><button id="fadePlus">+</button></div></div>
     </aside>
   </section>
 
@@ -66,11 +61,11 @@
   <section class="scoreboard">
     <article class="team away">
       <h2>VISITANTE</h2>
-      <div class="team-content">
+      <div class="team-body away-body">
         <img class="team-logo" id="awayLogo" alt="Logo visitante">
         <div class="cards">
-          <button data-card="awayYellowCards" title="Amarilla visitante"><em class="yellow"></em><strong id="awayYellow">0</strong><span>AMARILLAS</span></button>
-          <button data-card="awayRedCards" title="Roja visitante"><em class="red"></em><strong id="awayRed">0</strong><span>ROJAS</span></button>
+          <button data-card="awayYellowCards"><em class="yellow"></em><strong id="awayYellow">0</strong><span>AMARILLAS</span></button>
+          <button data-card="awayRedCards"><em class="red"></em><strong id="awayRed">0</strong><span>ROJAS</span></button>
         </div>
         <div class="scorebox">
           <div class="score-main"><button data-score="away" data-delta="-1">−</button><strong id="awayScore">0</strong><button data-score="away" data-delta="1">+</button></div>
@@ -95,7 +90,7 @@
 
     <article class="team home">
       <h2>LOCAL</h2>
-      <div class="team-content home-content">
+      <div class="team-body home-body">
         <div class="scorebox">
           <div class="score-main"><button data-score="home" data-delta="-1">−</button><strong id="homeScore">0</strong><button data-score="home" data-delta="1">+</button></div>
           <button class="plusone" data-score="home" data-delta="1">+1 GOL / CARRERA</button>
@@ -103,35 +98,23 @@
         </div>
         <img class="team-logo" id="homeLogo" alt="Logo local">
         <div class="cards">
-          <button data-card="homeYellowCards" title="Amarilla local"><em class="yellow"></em><strong id="homeYellow">0</strong><span>AMARILLAS</span></button>
-          <button data-card="homeRedCards" title="Roja local"><em class="red"></em><strong id="homeRed">0</strong><span>ROJAS</span></button>
+          <button data-card="homeYellowCards"><em class="yellow"></em><strong id="homeYellow">0</strong><span>AMARILLAS</span></button>
+          <button data-card="homeRedCards"><em class="red"></em><strong id="homeRed">0</strong><span>ROJAS</span></button>
         </div>
       </div>
       <div class="bases-wrap">
-        <span class="bases-label">BASES</span>
-        <div class="diamond">
-          <button data-base="second" class="base b2" aria-label="Segunda base"></button>
-          <button data-base="third" class="base b3" aria-label="Tercera base"></button>
-          <button data-base="first" class="base b1" aria-label="Primera base"></button>
-        </div>
+        <span>BASES</span>
+        <div class="diamond"><button data-base="second" class="base b2" aria-label="Segunda base"></button><button data-base="third" class="base b3" aria-label="Tercera base"></button><button data-base="first" class="base b1" aria-label="Primera base"></button></div>
         <button id="clearBases">LIMPIAR BASES</button>
       </div>
     </article>
   </section>
 
-  <section class="actions">
-    <button id="cut">CUT</button><button id="auto">AUTO</button><button id="fade">FADE</button><button id="black">BLACK</button><button id="replay">REPLAY</button><button id="fullControl">CONTROL COMPLETO</button>
-  </section>
-  <nav>
-    <button data-tab="production" class="active">PRODUCCIÓN</button><button data-tab="replay">REPLAY</button><button data-tab="graphics">GRÁFICOS</button><button data-tab="media">MEDIOS</button><button data-tab="system">SISTEMA</button>
-  </nav>
-</div>
+  <section class="actions"><button id="cut">CUT</button><button id="auto">AUTO</button><button id="fade">FADE</button><button id="black">BLACK</button><button id="replay">REPLAY</button><button id="fullControl">CONTROL COMPLETO</button></section>
+  <nav><button data-tab="production" class="active">PRODUCCIÓN</button><button data-tab="replay">REPLAY</button><button data-tab="graphics">GRÁFICOS</button><button data-tab="media">MEDIOS</button><button data-tab="system">SISTEMA</button></nav>
+</main>
 <iframe id="engine" title="Motor Director" aria-hidden="true"></iframe>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-<script src="../config/firebase-config.js?v=2300"></script>
-<script src="../config/app-config.js?v=2300"></script>
-<script src="../js/shared/core.js?v=2300"></script>
-<script src="../js/director/mobile-v230.js?v=2300"></script>
-</body>
-</html>
+<script src="../config/firebase-config.js?v=2400"></script><script src="../config/app-config.js?v=2400"></script><script src="../js/shared/core.js?v=2400"></script><script src="../js/director/mobile-v240.js?v=2400"></script>
+</body></html>
