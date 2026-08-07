@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#02060d">
+<title>Director PRO V27</title>
+<link rel="manifest" href="./manifest.webmanifest?v=2700">
+<link rel="icon" href="../assets/icons/cam1-master.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/director-mobile-v270.css?v=2700">
+</head>
+<body>
+<div id="rotateNotice">GIRA EL TELÉFONO A HORIZONTAL</div>
+<main id="app">
+  <header class="statusbar">
+    <span class="live">EN VIVO</span><span class="lat">● <span id="latency">— ms</span></span>
+    <strong>DIRECTOR - <span id="gameTitle">PARTIDO1</span></strong>
+    <span id="firebaseState">FIREBASE…</span>
+    <button id="installDirector" class="install-btn" type="button">INSTALAR APP</button>
+    <span id="clockNow"></span>
+  </header>
+
+  <section class="top-grid">
+    <article class="monitor program"><div class="mh"><b>PROGRAM</b><span>EN AIRE</span></div><video id="mProgram" autoplay muted playsinline></video><i id="programName">CAM1</i></article>
+    <article class="monitor preview"><div class="mh"><b>PREVIEW</b><span>VISTA PREVIA</span></div><video id="mPreview" autoplay muted playsinline></video><i id="previewName">CAM2</i></article>
+    <aside class="switch-side">
+      <div class="side-block cameras-block"><h3>SELECCIÓN DE CÁMARA</h3><div class="cam-buttons"><button data-cam="cam1">CAM1</button><button data-cam="cam2">CAM2</button><button data-cam="cam3">CAM3</button></div></div>
+      <div class="side-block transition-block"><small>TRANSICIÓN ACTUAL</small><strong id="transitionName">CORTE</strong></div>
+      <div class="side-block fade-block"><small>DURACIÓN FADE</small><div><button id="fadeMinus">−</button><b id="fadeValue">1.0s</b><button id="fadePlus">+</button></div></div>
+    </aside>
+  </section>
+
+  <section class="middle-grid">
+    <article class="source" data-source="cam1"><b>CAM1</b><video id="mCam1" autoplay muted playsinline></video><small id="sCam1">offline</small></article>
+    <article class="source" data-source="cam2"><b>CAM2</b><video id="mCam2" autoplay muted playsinline></video><small id="sCam2">offline</small></article>
+    <article class="source" data-source="cam3"><b>CAM3</b><video id="mCam3" autoplay muted playsinline></video><small id="sCam3">offline</small></article>
+    <aside class="quick-tools">
+      <div class="replay-quick"><h3>REPLAY RÁPIDO</h3><div class="three"><button data-replay="5">5s</button><button data-replay="10">10s</button><button data-replay="15">15s</button></div><small>VELOCIDAD</small><div class="four"><button data-speed="0.25">0.25x</button><button data-speed="0.5">0.5x</button><button data-speed="1" class="active">1x</button><button data-speed="2">2x</button></div></div>
+      <div class="stinger"><h3>STINGER / TRANSICIÓN</h3><div class="stinger-media"><img id="stingerImg" src="../assets/replay/baseball.svg" alt="Replay"></div><button id="testStinger">PROBAR TRANSICIÓN</button></div>
+    </aside>
+  </section>
+
+  <section class="scoreboard">
+    <article class="team away">
+      <h2>VISITANTE</h2>
+      <div class="team-main">
+        <img class="team-logo" id="awayLogo" alt="Logo visitante">
+        <div class="cards"><button data-card="awayYellowCards"><em class="yellow"></em><strong id="awayYellow">0</strong><span>AMARILLAS</span></button><button data-card="awayRedCards"><em class="red"></em><strong id="awayRed">0</strong><span>ROJAS</span></button></div>
+        <div class="scorebox"><div class="score-main"><button data-score="away" data-delta="-1">−</button><strong id="awayScore">0</strong><button data-score="away" data-delta="1">+</button></div><button class="plusone" data-score="away" data-delta="1">+1 GOL / CARRERA</button><small id="awayName">VISITANTE</small></div>
+      </div>
+    </article>
+
+    <article class="center">
+      <h2>PERIODO / RELOJ</h2>
+      <div class="period"><button id="periodMinus">−</button><strong id="periodValue">1</strong><button id="periodPlus">+</button><button id="clockStart" class="clock-play">▶</button><button id="clockPause">Ⅱ</button><b id="gameClock">00:00</b></div>
+      <div class="counts">
+        <label>BOLAS<div><button data-count="balls" data-delta="-1">−</button><strong id="balls">0</strong><button data-count="balls" data-delta="1">+</button></div></label>
+        <label>STRIKES<div><button data-count="strikes" data-delta="-1">−</button><strong id="strikes">0</strong><button data-count="strikes" data-delta="1">+</button></div></label>
+        <label>OUTS<div><button data-count="outs" data-delta="-1">−</button><strong id="outs">0</strong><button data-count="outs" data-delta="1">+</button></div></label>
+      </div>
+    </article>
+
+    <article class="team home">
+      <h2>LOCAL</h2>
+      <div class="team-main home-main">
+        <div class="scorebox"><div class="score-main"><button data-score="home" data-delta="-1">−</button><strong id="homeScore">0</strong><button data-score="home" data-delta="1">+</button></div><button class="plusone" data-score="home" data-delta="1">+1 GOL / CARRERA</button><small id="homeName">LOCAL</small></div>
+        <img class="team-logo" id="homeLogo" alt="Logo local">
+        <div class="cards"><button data-card="homeYellowCards"><em class="yellow"></em><strong id="homeYellow">0</strong><span>AMARILLAS</span></button><button data-card="homeRedCards"><em class="red"></em><strong id="homeRed">0</strong><span>ROJAS</span></button></div>
+      </div>
+      <div class="bases-wrap"><span>BASES</span><div class="diamond" aria-label="Bases"><button data-base="second" class="base b2" title="2B"></button><button data-base="third" class="base b3" title="3B"></button><button data-base="first" class="base b1" title="1B"></button></div><button id="clearBases">LIMPIAR BASES</button></div>
+    </article>
+  </section>
+
+  <section class="actions"><button id="cut">CUT</button><button id="auto">AUTO</button><button id="fade">FADE</button><button id="black">BLACK</button><button id="replay">REPLAY</button><button id="fullControl">CONTROL COMPLETO</button></section>
+  <nav><button data-tab="production" class="active">PRODUCCIÓN</button><button data-tab="replay">REPLAY</button><button data-tab="graphics">GRÁFICOS</button><button data-tab="media">MEDIOS</button><button data-tab="system">SISTEMA</button></nav>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<iframe id="engine" title="Motor Director" aria-hidden="true"></iframe>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="../config/firebase-config.js?v=2700"></script><script src="../config/app-config.js?v=2700"></script><script src="../js/shared/core.js?v=2700"></script><script src="../js/director/mobile-v270.js?v=2700"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=2700',{scope:'./'}).catch(console.warn));}</script>
+</body></html>

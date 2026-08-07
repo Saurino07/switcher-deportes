@@ -1,5 +1,7 @@
 (()=>{
   'use strict';
+  const __q=new URLSearchParams(location.search);
+  if(__q.get('desktop')==='1'||__q.get('embeddedMobile')==='1'||/mobile-v270\.html/i.test(location.pathname)) return;
   const isMobile=()=>/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||((navigator.maxTouchPoints||0)>0&&Math.min(screen.width,screen.height)<1100);
   if(!isMobile()) return;
   document.documentElement.classList.add('director-mobile-console');
