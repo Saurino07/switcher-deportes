@@ -1,7 +1,7 @@
 {
-  "name": "Director PRO V28",
+  "name": "Director PRO V28.1",
   "short_name": "Director PRO",
-  "start_url": "./mobile-v280.html?app=1&v=2800",
+  "start_url": "./mobile-v281.html?app=1&v=2810",
   "scope": "./",
   "display": "standalone",
   "orientation": "landscape",
