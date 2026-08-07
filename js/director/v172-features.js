@@ -19,5 +19,5 @@ $("sportClockReset").onclick=async()=>{const mode=$("sportClockMode").value,init
 const cardIds=["homeYellowCards","homeRedCards","awayYellowCards","awayRedCards"];
 sportRef.child("cards").on("value",s=>{const v=s.val()||{};cardIds.forEach(id=>$(id).value=clamp(+v[id]||0,0,9))});
 $("saveCards").onclick=async()=>{const payload=Object.fromEntries(cardIds.map(id=>[id,clamp(+$(id).value||0,0,9)]));await sportRef.child("cards").set({...payload,updatedAt:firebase.database.ServerValue.TIMESTAMP});cardIds.forEach(id=>$(id).value=payload[id]);};
-$("resetCards").onclick=async()=>{const cleared={homeYellowCards:0,homeRedCards:0,awayYellowCards:0,awayRedCards:0,updatedAt:firebase.database.ServerValue.TIMESTAMP};cardIds.forEach(id=>$(id).value=0);await sportRef.child("cards").set(cleared);};
+$("resetCards").onclick=async()=>{const cleared={homeYellowCards:0,homeRedCards:0,awayYellowCards:0,awayRedCards:0,updatedAt:firebase.database.ServerValue.TIMESTAMP};cardIds.forEach(id=>$(id).value=0);try{await sportRef.child("cards").set(cleared);$("v172SyncStatus").textContent="TARJETAS LIMPIAS";}catch(e){console.error(e);$("v172SyncStatus").textContent="ERROR AL LIMPIAR TARJETAS";alert("No se pudieron limpiar las tarjetas: "+e.message);}};
 })();

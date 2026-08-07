@@ -1,6 +1,6 @@
 {
   "id": "./cam1-master/",
-  "name": "Switcher Deportivo V17 Sports Platform",
+  "name": "Switcher Deportivo V17 Sports Platform V26",
   "short_name": "CAM1 Sports",
   "description": "Salida principal para PRISM Screencast, cámaras remotas, replay y overlay.",
   "start_url": "./cam1-master/index.html?v=2400",

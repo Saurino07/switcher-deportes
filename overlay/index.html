@@ -4053,6 +4053,33 @@ firebase.database().ref("gameState")
 
 });
 
+
+// V26 COMPAT: estado de béisbol dentro de switcher/{game}/baseballState.
+// Se usa únicamente como respaldo cuando las reglas de Firebase no permiten escribir en gameState.
+(function(){
+  try {
+    const q = new URLSearchParams(location.search);
+    const compatGame = (q.get('game') || 'partido1').replace(/[^a-zA-Z0-9_-]/g,'-');
+    firebase.database().ref(`switcher/${compatGame}/baseballState`).on('value', snap => {
+      const g = snap.val(); if (!g) return;
+      const a=g.away||{}, h=g.home||{}, bases=g.bases||{};
+      const setText=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+      setText('awayScore', a.score ?? 0); setText('homeScore', h.score ?? 0);
+      setText('awayName', a.name || document.getElementById('awayName')?.textContent || 'VISITANTE');
+      setText('homeName', h.name || document.getElementById('homeName')?.textContent || 'LOCAL');
+      if (a.logo && document.getElementById('awayLogo')) document.getElementById('awayLogo').src=a.logo;
+      if (h.logo && document.getElementById('homeLogo')) document.getElementById('homeLogo').src=h.logo;
+      const balls=Number(g.balls)||0,strikes=Number(g.strikes)||0,outs=Number(g.outs)||0;
+      ['ball1','ball2','ball3'].forEach((id,i)=>document.getElementById(id)?.classList.toggle('active',balls>=i+1));
+      ['strike1','strike2'].forEach((id,i)=>document.getElementById(id)?.classList.toggle('active',strikes>=i+1));
+      ['out1','out2'].forEach((id,i)=>document.getElementById(id)?.classList.toggle('active',outs>=i+1));
+      const inn=document.getElementById('inningText'); if(inn)inn.textContent=`${g.inning||1}ª ${(g.inningSide||'alta').toUpperCase()}`;
+      document.getElementById('base1')?.classList.toggle('active',!!bases.first);
+      document.getElementById('base2')?.classList.toggle('active',!!bases.second);
+      document.getElementById('base3')?.classList.toggle('active',!!bases.third);
+    });
+  } catch(e) { console.warn('V26 baseballState compat', e); }
+})();
 </script>
 </body>
 </html>

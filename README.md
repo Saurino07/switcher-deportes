@@ -1,3 +1,7 @@
+# Switcher Deportivo V26
+
+Reconstrucción funcional del Director móvil. Esta versión sustituye la navegación móvil anterior por un panel rápido estable y un panel avanzado embebido. También añade compatibilidad para los controles de béisbol bajo `switcher/{game}/baseballState` cuando las reglas de Firebase impiden escribir en `gameState`.
+
 ## V25.0 Director móvil validado
 
 Esta entrega reemplaza el panel móvil V20 y corrige transiciones, bases, conteos, tarjetas y controles numéricos.
@@ -29,11 +33,11 @@ El tamaño, posición y márgenes se aplican igual en las dos salidas. El valor 
 
 ## URLs
 
-- CAM1 Master: `/cam1-master/index.html?game=partido1&v=2500&code=TU_CODIGO`
-- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=2500&code=TU_CODIGO`
-- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=2500&code=TU_CODIGO`
-- Director: `/director/index.html?game=partido1&v=2500&code=TU_CODIGO`
-- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=2500&code=TU_CODIGO`
+- CAM1 Master: `/cam1-master/index.html?game=partido1&v=2600&code=TU_CODIGO`
+- CAM2: `/cam/index.html?cam=cam2&game=partido1&v=2600&code=TU_CODIGO`
+- CAM3: `/cam/index.html?cam=cam3&game=partido1&v=2600&code=TU_CODIGO`
+- Director: `/director/index.html?game=partido1&v=2600&code=TU_CODIGO`
+- Overlay PRISM: `/prism-overlay/index.html?game=partido1&v=2600&code=TU_CODIGO`
 
 ## Recomendación térmica
 

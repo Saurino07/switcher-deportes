@@ -1,16 +1,24 @@
 {
-  "name": "Director Broadcast Deportivo V25",
-  "short_name": "Director PRO",
+  "name": "Director PRO V26",
+  "short_name": "Director V26",
   "description": "Director móvil profesional para producción deportiva multicámara.",
-  "id": "./mobile-v250.html",
-  "start_url": "./mobile-v250.html?game=partido1&v=2500",
+  "id": "./mobile-v260.html",
+  "start_url": "./mobile-v260.html?v=2600",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["fullscreen", "standalone"],
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
   "orientation": "landscape",
   "background_color": "#02060d",
   "theme_color": "#02060d",
   "icons": [
-    {"src":"../assets/icons/cam1-master.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+    {
+      "src": "../assets/icons/cam1-master.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
