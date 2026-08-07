@@ -1,9 +1,9 @@
 {
-  "name": "Director Broadcast Deportivo",
+  "name": "Director Broadcast Deportivo V25",
   "short_name": "Director PRO",
-  "description": "Director móvil para producción deportiva multicámara.",
-  "id": "./mobile.html",
-  "start_url": "./mobile.html?game=partido1&v=2400",
+  "description": "Director móvil profesional para producción deportiva multicámara.",
+  "id": "./mobile-v250.html",
+  "start_url": "./mobile-v250.html?game=partido1&v=2500",
   "scope": "./",
   "display": "standalone",
   "display_override": ["fullscreen", "standalone"],
