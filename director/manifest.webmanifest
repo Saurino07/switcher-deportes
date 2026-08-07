@@ -1,11 +1,11 @@
 {
-  "name": "Director PRO V28.1",
-  "short_name": "Director PRO",
-  "start_url": "./mobile-v281.html?app=1&v=2810",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "landscape",
-  "background_color": "#02060d",
-  "theme_color": "#02060d",
-  "icons": [{"src":"../assets/icons/cam1-master.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "name":"Director PRO V29",
+  "short_name":"Director PRO",
+  "start_url":"./mobile-v290.html?app=1&v=2900",
+  "scope":"./",
+  "display":"standalone",
+  "orientation":"landscape",
+  "background_color":"#02060d",
+  "theme_color":"#02060d",
+  "icons":[{"src":"../assets/icons/cam1-master.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }

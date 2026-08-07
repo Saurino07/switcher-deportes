@@ -1,3 +1,11 @@
+## V29.0 Director móvil definitivo
+
+- Mantiene el diseño aprobado de V28.
+- BOLAS / STRIKES / OUTS integrados en el bloque central y siempre visibles en béisbol.
+- Bases integradas en el bloque LOCAL con diamantes activos en amarillo.
+- Módulos móviles muestran solo el panel seleccionado y barra compacta de regreso.
+- PWA Director PRO actualizada a V29.
+
 # Switcher Deportivo V26
 
 Reconstrucción funcional del Director móvil. Esta versión sustituye la navegación móvil anterior por un panel rápido estable y un panel avanzado embebido. También añade compatibilidad para los controles de béisbol bajo `switcher/{game}/baseballState` cuando las reglas de Firebase impiden escribir en `gameState`.
